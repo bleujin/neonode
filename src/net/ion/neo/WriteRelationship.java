@@ -17,11 +17,11 @@ public class WriteRelationship {
 	}
 
 	public WriteNode endNode() {
-		return WriteNode.findBy(wsession, relationShip.getEndNode());
+		return wsession.node(relationShip.getEndNode());
 	}
 
 	public WriteNode startNode() {
-		return WriteNode.findBy(wsession, relationShip.getStartNode());
+		return wsession.node(relationShip.getStartNode());
 	}
 
 	public boolean has(String pkey){

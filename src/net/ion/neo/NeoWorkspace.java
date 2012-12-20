@@ -2,26 +2,20 @@ package net.ion.neo;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
 import net.ion.isearcher.searcher.MyKoreanAnalyzer;
 
-import org.apache.lucene.index.Term;
-import org.apache.lucene.search.TermQuery;
-import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
+import org.neo4j.graphdb.event.KernelEventHandler;
+import org.neo4j.graphdb.event.TransactionEventHandler;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
-import org.neo4j.graphdb.index.AutoIndexer;
 import org.neo4j.graphdb.index.Index;
-import org.neo4j.graphdb.index.IndexHits;
 import org.neo4j.graphdb.index.IndexManager;
-import org.neo4j.graphdb.index.ReadableIndex;
 import org.neo4j.helpers.collection.MapUtil;
 import org.neo4j.kernel.impl.util.FileUtils;
 
@@ -65,13 +59,13 @@ public class NeoWorkspace {
 	}
 
 
-	public <T> Future<T> tran(final NeoSession session, final TransactionJob<T> tjob) {
+	public <T> Future<T> tran(final ReadSession session, final TransactionJob<T> tjob, final TranExceptionHandler handler) {
 		final NeoWorkspace workspace = this ;
 		return repository.executor().submitTask(new Callable<T>() {
 
 			@Override
 			public T call() throws Exception {
-				WriteSession tsession = new WriteSession(session, workspace, graphDB);
+				WriteSession tsession = new WriteSession(session, workspace);
 				Transaction tran = graphDB.beginTx() ;
 				try {
 					tjob.handle(tsession) ;
@@ -80,6 +74,7 @@ public class NeoWorkspace {
 					tran.success() ;
 				} catch(Throwable ex) {
 					tran.failure() ;
+					handler.handle(tsession, ex) ;
 				} finally {
 					tran.finish() ;
 				}
@@ -90,24 +85,33 @@ public class NeoWorkspace {
 	}
 	
 	private Index<Node> indexKeyNode(){
-		return graphDB.index().forNodes("keyproperty", MapUtil.stringMap(IndexManager.PROVIDER, "lucene", "type", "exact", "to_lower_case", "true")) ;
+		return graphDB.index().forNodes("keyproperty", MapUtil.stringMap(IndexManager.PROVIDER, "neolucene", "type", "exact", "to_lower_case", "true")) ;
 	}
 	
 	public Index<Node> indexTextNode(){
 		
-		return graphDB.index().forNodes("keyproperty", MapUtil.stringMap(IndexManager.PROVIDER, "lucene", "type", "exact", "to_lower_case", "true")) ;
+//		return graphDB.index().forNodes("keyproperty", MapUtil.stringMap(IndexManager.PROVIDER, "lucene", "type", "exact", "to_lower_case", "true")) ;
 		
-//		return graphDB.index().forNodes("fulltextproperty", MapUtil.stringMap(IndexManager.PROVIDER, "lucene", "type", "fulltext", "to_lower_case", "true", "analyzer", MyKoreanAnalyzer.class.getCanonicalName())) ;
+		final IndexManager im = graphDB.index();
+		return im.forNodes("fulltextproperty", MapUtil.stringMap(IndexManager.PROVIDER, "neolucene", "type", "fulltext", "to_lower_case", "true", "analyzer", MyKoreanAnalyzer.class.getCanonicalName())) ;
 	}
 	
 	
-	
-	public ReadNode rootNode(NeoSession session) {
-		return ReadNode.findBy(session, graphDB.getNodeById(0));
+	// test
+	GraphDatabaseService graphDB() {
+		return graphDB ;
 	}
 	
-	public WriteNode rootNode(WriteSession tsession){
-		return WriteNode.findBy(tsession, graphDB.getNodeById(0)) ;
+	
+	public NeoWorkspace registerEventHandler(KernelEventHandler ehandler){
+		graphDB.registerKernelEventHandler(ehandler) ;
+		return this ;
 	}
+	
+	public <T> NeoWorkspace registerTransactionHandler(TransactionEventHandler<T> ehandler){
+		graphDB.registerTransactionEventHandler(ehandler) ;
+		return this ;
+	}
+	
 	
 }

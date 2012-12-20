@@ -65,6 +65,7 @@ public class TestIndex extends TestCase {
 		aindexer.startAutoIndexingProperty("name") ;
 		aindexer.startAutoIndexingProperty("age") ;
 		aindexer.setEnabled(true) ;
+		
 
 		createSampleNode() ;
 

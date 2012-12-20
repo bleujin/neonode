@@ -14,17 +14,18 @@ import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.index.Index;
 import org.neo4j.graphdb.index.IndexManager;
 
-public class WriteSession {
+public class WriteSession extends NeoSession {
 
-	private NeoSession session ;
-	private NeoWorkspace workspace ;
+	private ReadSession session ;
+	private NeoWorkspace wspace ;
 	private GraphDatabaseService graphDB ;
 	
-	WriteSession(NeoSession session, NeoWorkspace workspace, GraphDatabaseService graphDB) {
+	WriteSession(ReadSession session, NeoWorkspace workspace) {
 		this.session = session ;
-		this.workspace = workspace ; 
-		this.graphDB = graphDB ;
+		this.wspace = workspace ; 
+		this.graphDB = workspace.graphDB() ;
 	}
+	
 	
 	WriteNode mergeChildNode(WriteNode parent, String relName) {
 		
@@ -48,16 +49,22 @@ public class WriteSession {
 		return WriteNode.findBy(this, graphDB.getNodeById(0)) ;
 	}
 	
+	WriteNode node(Node inner){
+		return WriteNode.findBy(this, inner) ;
+	}
 	
 	public WriteNode newNode(){
 		Node newNode = graphDB.createNode() ;
 		return WriteNode.findBy(this, newNode) ;
 	}
 	
-	NeoWorkspace workspace() {
-		return workspace;
+	public NeoWorkspace workspace() {
+		return wspace;
 	}
-	
-	
+
+	public SessionQuery<WriteNode> createQuery() {
+		return SessionQuery.create(wspace, this) ;
+	}
+
 
 }

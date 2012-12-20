@@ -1,41 +1,11 @@
 package net.ion.neo;
 
-import java.io.IOException;
-import java.util.concurrent.Future;
+import org.neo4j.graphdb.Node;
 
-public class NeoSession {
+public abstract class NeoSession<T> {
 
-	private final Credential credential ;
-	private NeoWorkspace wspace ;
-	
-	NeoSession(Credential credential, NeoWorkspace wspace) {
-		this.credential = credential ;
-		this.wspace = wspace ;
-	}
+	abstract T node(Node inner) ;
 
-	public ReadNode rootNode() {
-		return wspace.rootNode(this) ;
-	}
-
-	public NeoWorkspace currentWorkspace() {
-		return wspace ;
-	}
-	
-	public Credential credential(){
-		return credential ; 
-	}
-
-	public void dropWorkspace() throws IOException {
-		wspace.clear() ;
-	}
-
-	public <T> Future<T> tran(TransactionJob<T> tjob) {
-		return wspace.tran(this, tjob) ;
-		
-	}
-
-	public SessionQuery createQuery() {
-		return SessionQuery.create(wspace, this) ;
-	}
+	public abstract NeoWorkspace workspace() ;
 
 }

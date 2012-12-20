@@ -26,12 +26,12 @@ public class NeoRepository {
 		return executor ;
 	}
 	
-	public NeoSession testLogin(String wsname) {
+	public ReadSession testLogin(String wsname) {
 		return login(Credential.EMANON, wsname) ;
 	}
 	
-	public NeoSession login(Credential credential, String wsname) {
-		return new NeoSession(credential, loadWorkspce(wsname));
+	public ReadSession login(Credential credential, String wsname) {
+		return new ReadSession(credential, loadWorkspce(wsname));
 	}
 	
 	private synchronized NeoWorkspace loadWorkspce(String wsname){

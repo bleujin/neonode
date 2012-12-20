@@ -11,25 +11,25 @@ import net.ion.framework.util.ListUtil;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.index.IndexHits;
 
-public class NodeCursor {
+public class NodeCursor<T extends NeoNode> {
 
-	private NeoSession session ;
+	private NeoSession<T> session ;
 	private IndexHits<Node> hits ;
 	private NodeCursor(NeoSession session, IndexHits<Node> hits) {
 		this.session = session ;
 		this.hits = hits ;
 	}
 
-	public static NodeCursor create(NeoSession session, IndexHits<Node> hits) {
+	public static <F extends NeoNode> NodeCursor<F> create(NeoSession session, IndexHits<Node> hits) {
 		return new NodeCursor(session, hits);
 	}
 
 	public void debugPrint(Page page) {
-		each(page, new DebugPrinter());
+		each(page, new DebugPrinter<T>());
 	}
 
-	public ReadNode next(){
-		return ReadNode.findBy(session, hits.next()) ;
+	public T next(){
+		return session.node(hits.next());
 	}
 	
 	public void each(Page page, Closure closure) {
@@ -40,12 +40,12 @@ public class NodeCursor {
 		hits.close() ;
 	}
 	
-	public List<ReadNode> toList(Page page) {
+	public List<T> toList(Page page) {
 		int pageIndexOnScreen = page.getPageNo() - page.getMinPageNoOnScreen() ;
 		return toList(pageIndexOnScreen * page.getListNum(), page.getListNum());
 	}
 
-	public List<ReadNode> toList(int skip, int limit) {
+	public List<T> toList(int skip, int limit) {
 		while (skip-- > 0) {
 			if (hits.hasNext()) {
 				hits.next();
@@ -53,9 +53,9 @@ public class NodeCursor {
 				return ListUtil.EMPTY;
 			}
 		}
-		List<ReadNode> result = ListUtil.newList();
+		List<T> result = ListUtil.newList();
 		while (limit-- > 0 && hits.hasNext()) {
-			result.add(ReadNode.findBy(session, hits.next()));
+			result.add((T)session.node(hits.next()));
 		}
 		return result;
 	}
@@ -64,10 +64,12 @@ public class NodeCursor {
 		return hits.size();
 	}
 
-	public ReadNode first() {
-		Node inner = hits.getSingle();
-		if (inner == null) return null ;
-		return ReadNode.findBy(session, inner);
+	public T first() {
+		if (! hits.hasNext()){
+			return null ;
+		} else {
+			return (T) session.node(hits.next()) ;
+		}
 	}
 
 }

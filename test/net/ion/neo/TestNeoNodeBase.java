@@ -5,7 +5,7 @@ import junit.framework.TestCase;
 public class TestNeoNodeBase extends TestCase{
 
 	protected NeoRepository rep;
-	protected NeoSession session ;
+	protected ReadSession session ;
 
 	@Override
 	protected void setUp() throws Exception {
