@@ -39,7 +39,7 @@ public class TestCreateNode extends TestNeoNodeBase {
 		}).get() ;
 		
 		ReadRelationship rel = session.rootNode().firstRelationShip(Direction.OUTGOING, RelType.CHILD);
-		assertEquals("bleujin", rel.property(NeoConstant.ChildRelationName)) ;
+		assertEquals("bleujin", rel.property(NeoConstant.RelationName)) ;
 
 		ReadNode endNode = rel.endNode();
 		assertEquals(20, endNode.property("age")) ;

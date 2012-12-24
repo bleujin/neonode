@@ -18,7 +18,7 @@ public class WriteNode extends NeoNode {
 		this.wsession = tsession ;
 	}
 
-	public static WriteNode findBy(WriteSession tsession, Node inner) {
+	public static WriteNode load(WriteSession tsession, Node inner) {
 		return new WriteNode(tsession, inner);
 	}
 
@@ -38,29 +38,34 @@ public class WriteNode extends NeoNode {
 		return this ;
 	}
 	
-	public ListIterable<WriteRelationship> relationShips(Direction direction){
-		return new IterableWriteRealtion(wsession, inner().getRelationships(direction)) ;
-	}
-	
-	public ListIterable<WriteRelationship> relationShips(Direction direction, RelationshipType rtype){
-		return new IterableWriteRealtion(wsession, inner().getRelationships(direction, rtype)) ;
-	}
-	
 	public ListIterable<WriteRelationship> relationShips(Direction direction, RelationshipType... rtypes){
+		if (rtypes.length == 0){
+			return new IterableWriteRealtion(wsession, inner().getRelationships(direction)) ;
+		}
 		return new IterableWriteRealtion(wsession, inner().getRelationships(direction, rtypes)) ;
 	}
 
 	public WriteRelationship firstRelationShip(Direction direction, RelationshipType... rtypes){
-		Iterator<WriteRelationship> iterator = relationShips(direction, rtypes).iterator();
+		Iterator<WriteRelationship> iterator = null;
+		if (rtypes.length == 0){
+			iterator = new IterableWriteRealtion(wsession, inner().getRelationships(direction)).iterator() ;
+		} else {
+			iterator = relationShips(direction, rtypes).iterator();
+		}
+		
 		if (iterator.hasNext()){
 			return iterator.next() ; 
 		}
 		return null ; 
 	}
-	
+
 	public WriteRelationship createRelationshipTo(WriteNode node, RelationshipType rel) {
+		return createRelationshipTo(node, rel, NeoConstant.DefaultRelationName) ;
+	}
+
+	public WriteRelationship createRelationshipTo(WriteNode node, RelationshipType rel, String relName) {
 		Relationship relationShip = inner().createRelationshipTo(node.inner(), rel);
-		return new WriteRelationship(wsession, relationShip);
+		return new WriteRelationship(wsession, relationShip).property(NeoConstant.RelationName, relName);
 	}
 
 	public WriteNode mergeChild(String relName) {

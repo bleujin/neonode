@@ -8,7 +8,7 @@ import net.ion.neo.util.ListIterable;
 
 import org.neo4j.graphdb.Node;
 
-public class IterableReadNode implements ListIterable<ReadNode> {
+public class IterableReadNode extends ListIterable<ReadNode> {
 
 	private IteratorReadNode iterator ;
 	IterableReadNode(ReadSession rsession, Iterable<Node> iterable) {
@@ -20,14 +20,6 @@ public class IterableReadNode implements ListIterable<ReadNode> {
 		return iterator;
 	}
 
-	@Override
-	public List<ReadNode> toList() {
-		List<ReadNode> result = ListUtil.newList();
-		for (ReadNode rs : this) {
-			result.add(rs) ;
-		}
-		return result;
-	}
 
 }
 

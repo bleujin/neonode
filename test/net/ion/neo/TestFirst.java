@@ -5,6 +5,7 @@ import java.util.concurrent.Future;
 
 import org.neo4j.graphdb.Direction;
 
+import net.ion.framework.db.Page;
 import net.ion.framework.util.Debug;
 import net.ion.neo.NeoWorkspace.RelType;
 import net.ion.neo.util.ListIterable;
@@ -18,6 +19,7 @@ public class TestFirst extends TestCase {
 	protected void setUp() throws Exception {
 		super.setUp();
 		this.rep = new NeoRepository();
+		
 	}
 
 	@Override
@@ -26,9 +28,11 @@ public class TestFirst extends TestCase {
 		super.tearDown();
 	}
 
-	public void testCreateGraph() throws Exception {
+	public void testCreateGet() throws Exception {
 		ReadSession session = rep.testLogin("test");
-		Future<Void> future = session.tran(new TransactionJob<Void>() {
+		session.workspace().clear() ;
+		
+		session.tran(new TransactionJob<Void>() {
 			@Override
 			public Void handle(WriteSession tsession) {
 				WriteNode root = tsession.rootNode();
@@ -41,17 +45,12 @@ public class TestFirst extends TestCase {
 				
 				WriteRelationship relation = hello.createRelationshipTo(world, RelType.create("KNOW"));
 				relation.property("msg", " ") ;
-				
 				return null;
 			}
-		});
+		}).get() ;
 		
-		future.get() ;
-		
-		ReadNode root = session.rootNode();
-		ListIterable<ReadRelationship> rels = root.relationShips(Direction.OUTGOING, RelType.CHILD);
-		
-		Debug.line(rels.toList().toArray()) ;
+		session.createQuery().find().debugPrint(Page.ALL) ;
+		session.rootNode().relationShips(Direction.OUTGOING, RelType.CHILD).debugPrint(Page.ALL) ;
 	}
 	
 }

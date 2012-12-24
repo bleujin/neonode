@@ -7,8 +7,10 @@ import java.util.concurrent.Future;
 
 import net.ion.isearcher.searcher.MyKoreanAnalyzer;
 
+import org.neo4j.cypher.javacompat.ExecutionEngine;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.event.KernelEventHandler;
@@ -16,6 +18,7 @@ import org.neo4j.graphdb.event.TransactionEventHandler;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.index.Index;
 import org.neo4j.graphdb.index.IndexManager;
+import org.neo4j.graphdb.index.RelationshipIndex;
 import org.neo4j.helpers.collection.MapUtil;
 import org.neo4j.kernel.impl.util.FileUtils;
 
@@ -37,10 +40,13 @@ public class NeoWorkspace {
 	private final NeoRepository repository ;
 	private final String dbPath ;
 	private GraphDatabaseService graphDB ;
+	private ExecutionEngine engine ;
+	
 	private NeoWorkspace(NeoRepository repository, String dbPath) {
 		this.repository = repository ;
 		this.dbPath = dbPath ; 
 		this.graphDB = new GraphDatabaseFactory().newEmbeddedDatabase(dbPath) ;
+		this.engine = new ExecutionEngine(graphDB) ;
 	}
 
 	public static NeoWorkspace create(NeoRepository repository, String path) {
@@ -56,6 +62,7 @@ public class NeoWorkspace {
 		final File file = new File(dbPath);
 		if (file.exists()) FileUtils.deleteRecursively(file);
 		this.graphDB = new GraphDatabaseFactory().newEmbeddedDatabase(dbPath) ;
+		this.engine = new ExecutionEngine(graphDB) ;
 	}
 
 
@@ -68,10 +75,9 @@ public class NeoWorkspace {
 				WriteSession tsession = new WriteSession(session, workspace);
 				Transaction tran = graphDB.beginTx() ;
 				try {
-					tjob.handle(tsession) ;
-					
-					
+					T result = tjob.handle(tsession) ;
 					tran.success() ;
+					return result ;
 				} catch(Throwable ex) {
 					tran.failure() ;
 					handler.handle(tsession, ex) ;
@@ -88,18 +94,32 @@ public class NeoWorkspace {
 		return graphDB.index().forNodes("keyproperty", MapUtil.stringMap(IndexManager.PROVIDER, "neolucene", "type", "exact", "to_lower_case", "true")) ;
 	}
 	
+	public RelationshipIndex indexTextRelation(){
+		return graphDB.index().forRelationships("fulltextrelation", MapUtil.stringMap(IndexManager.PROVIDER, "neolucene", "type", "fulltext", "to_lower_case", "true", "analyzer", MyKoreanAnalyzer.class.getCanonicalName())) ;
+	}
+	
 	public Index<Node> indexTextNode(){
 		
 //		return graphDB.index().forNodes("keyproperty", MapUtil.stringMap(IndexManager.PROVIDER, "lucene", "type", "exact", "to_lower_case", "true")) ;
-		
-		final IndexManager im = graphDB.index();
-		return im.forNodes("fulltextproperty", MapUtil.stringMap(IndexManager.PROVIDER, "neolucene", "type", "fulltext", "to_lower_case", "true", "analyzer", MyKoreanAnalyzer.class.getCanonicalName())) ;
+		return graphDB.index().forNodes("fulltextproperty", MapUtil.stringMap(IndexManager.PROVIDER, "neolucene", "type", "fulltext", "to_lower_case", "true", "analyzer", MyKoreanAnalyzer.class.getCanonicalName())) ;
 	}
 	
 	
-	// test
+	// use only test
 	GraphDatabaseService graphDB() {
 		return graphDB ;
+	}
+	
+	Node getNodeById(long id){
+		return graphDB.getNodeById(id) ;
+	}
+	
+	ExecutionEngine executionEngine(){
+		return engine ;
+	}
+	
+	Node createNode(){
+		return graphDB.createNode() ;
 	}
 	
 	

@@ -19,53 +19,56 @@ import org.apache.lucene.search.SortField;
 import org.apache.lucene.util.Version;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.index.Index;
-import org.neo4j.graphdb.index.IndexHits;
+import org.neo4j.graphdb.index.RelationshipIndex;
 
-public class SessionQuery<T extends NeoNode> {
+public class RelationQuery<T extends NeoRelationship> {
 
-	private NeoSession session;
+	private NeoSession session ;
 	private String queryString;
 	private List<SortField> sorts = ListUtil.newList();
-
-	SessionQuery(NeoSession session) {
-		this.session = session;
+	
+	public RelationQuery(NeoSession session) {
+		this.session = session ;
 	}
 
-	public static <T> SessionQuery create(NeoSession session) {
-		return new SessionQuery<ReadNode>(session);
+	public static RelationQuery create(NeoSession session) {
+		return new RelationQuery(session);
 	}
 
-	public SessionQuery<T> parseQuery(String queryString) {
+
+	public RelationQuery<T> parseQuery(String queryString) {
 		this.queryString = queryString;
 		return this;
 	}
 
-	public SessionQuery<T> ascending(String propId) {
+	public RelationQuery<T> ascending(String propId) {
 		sorts.add(new SortField(propId + MyField.SORT_POSTFIX, SortField.STRING));
 		return this;
 	}
 
-	public SessionQuery<T> ascending(String propId, int sortType) {
+	public RelationQuery<T> ascending(String propId, int sortType) {
 		sorts.add(new SortField(propId + MyField.SORT_POSTFIX, sortType));
 		return this;
 	}
 
-	public SessionQuery<T> descending(String propId) {
+	public RelationQuery<T> descending(String propId) {
 		sorts.add(new SortField(propId + MyField.SORT_POSTFIX, SortField.STRING, true));
 		return this;
 	}
 
-	public SessionQuery<T> descending(String propId, int sortType) {
+	public RelationQuery<T> descending(String propId, int sortType) {
 		sorts.add(new SortField(propId + MyField.SORT_POSTFIX, sortType, true));
 		return this;
 	}
 
-	public NodeCursor<T> find(){
+	public RelationCursor<T> find(){
 		try {
-			Index<Node> indexer = session.workspace().indexTextNode();
+			
+			
+			RelationshipIndex indexer = session.workspace().indexTextRelation();
 			QueryContext query = createQuery(queryString);
 
-			return NodeCursor.create(session, indexer.query(query));
+			return RelationCursor.create(session, indexer.query(query));
 		} catch (ParseException ex) {
 			throw new IllegalArgumentException(ex);
 		}
@@ -91,5 +94,4 @@ public class SessionQuery<T extends NeoNode> {
 	public T findOne() {
 		return (T) find().first();
 	}
-
 }

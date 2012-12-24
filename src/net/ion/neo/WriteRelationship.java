@@ -1,15 +1,13 @@
 package net.ion.neo;
 
 import org.neo4j.graphdb.Relationship;
-import org.neo4j.graphdb.RelationshipType;
 
-public class WriteRelationship {
+public class WriteRelationship extends NeoRelationship {
 
 	private WriteSession wsession ;
-	private Relationship relationShip ;
 	WriteRelationship(WriteSession wsession, Relationship relationShip) {
+		super(relationShip) ;
 		this.wsession = wsession ;
-		this.relationShip = relationShip ;
 	}
 
 	public static WriteRelationship load(WriteSession wsession, Relationship relationShip) {
@@ -17,47 +15,26 @@ public class WriteRelationship {
 	}
 
 	public WriteNode endNode() {
-		return wsession.node(relationShip.getEndNode());
+		return wsession.node(relationShip().getEndNode());
 	}
 
 	public WriteNode startNode() {
-		return wsession.node(relationShip.getStartNode());
-	}
-
-	public boolean has(String pkey){
-		return relationShip.hasProperty(pkey) ;
-	}
-	
-	public Object property(String pkey) {
-		return relationShip.getProperty(pkey);
+		return wsession.node(relationShip().getStartNode());
 	}
 
 	public WriteRelationship property(String pkey, Object value){
-		relationShip.setProperty(pkey, value) ;
+		wsession.workspace().indexTextRelation().add(relationShip(), pkey, value) ;
+		relationShip().setProperty(pkey, value) ;
 		return this ;
 	}
 	
-	public Iterable<String> keys(){
-		return relationShip.getPropertyKeys() ;
-	}
-
-	public WriteRelationship remove(String pkey){
-		relationShip.removeProperty(pkey) ;
+	public WriteRelationship unset(String pkey){
+		relationShip().removeProperty(pkey) ;
 		return this ;
 	}
 	
-
-	public RelationshipType type(){
-		return relationShip.getType() ;
+	public void remove(){
+		relationShip().delete() ;
 	}
-	
-	public boolean isType(RelationshipType type){
-		return relationShip.isType(type) ;
-	}
-	
-	
-	
-	
-	
 	
 }

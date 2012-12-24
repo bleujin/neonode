@@ -10,32 +10,34 @@ import net.ion.framework.util.ListUtil;
 import net.ion.neo.util.DebugPrinter;
 
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.index.IndexHits;
 
-public class NodeCursor<T extends NeoNode> {
+public class RelationCursor <T extends NeoRelationship> {
 
-	private NeoSession<T, ?> session ;
-	private IndexHits<Node> hits ;
-	private NodeCursor(NeoSession session, IndexHits<Node> hits) {
+	private NeoSession<?, T> session ;
+	private IndexHits<Relationship> hits ;
+	private RelationCursor(NeoSession session, IndexHits<Relationship> hits) {
 		this.session = session ;
 		this.hits = hits ;
 	}
 
-	static NodeCursor create(NeoSession session, IndexHits<Node> hits) {
-		return new NodeCursor(session, hits);
+	static RelationCursor create(NeoSession session, IndexHits<Relationship> hits) {
+		return new RelationCursor(session, hits);
 	}
 
 	public void debugPrint(Page page) {
 		each(page, new DebugPrinter<T>());
 	}
+
+	public T next(){
+		return session.relation(hits.next());
+	}
 	
 	public void each(Page page, Closure closure) {
 		CollectionUtil.each(toList(page), closure);
 	}
-
-	public T next(){
-		return session.node(hits.next());
-	}
+	
 	public void close(){
 		hits.close() ;
 	}
@@ -55,7 +57,7 @@ public class NodeCursor<T extends NeoNode> {
 		}
 		List<T> result = ListUtil.newList();
 		while (limit-- > 0 && hits.hasNext()) {
-			result.add((T)session.node(hits.next()));
+			result.add((T)session.relation(hits.next()));
 		}
 		return result;
 	}
@@ -68,8 +70,9 @@ public class NodeCursor<T extends NeoNode> {
 		if (! hits.hasNext()){
 			return null ;
 		} else {
-			return (T) session.node(hits.next()) ;
+			return (T) session.relation(hits.next()) ;
 		}
 	}
 
 }
+

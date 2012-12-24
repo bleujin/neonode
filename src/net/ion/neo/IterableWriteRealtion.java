@@ -8,7 +8,7 @@ import net.ion.neo.util.ListIterable;
 
 import org.neo4j.graphdb.Relationship;
 
-public class IterableWriteRealtion implements ListIterable<WriteRelationship> {
+public class IterableWriteRealtion extends ListIterable<WriteRelationship> {
 
 	private IteratorWriteRelation iterator ;
 	IterableWriteRealtion(WriteSession wsession, Iterable<Relationship> iterable) {

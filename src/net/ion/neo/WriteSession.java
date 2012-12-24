@@ -14,16 +14,14 @@ import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.index.Index;
 import org.neo4j.graphdb.index.IndexManager;
 
-public class WriteSession extends NeoSession {
+public class WriteSession extends NeoSession<WriteNode, WriteRelationship> {
 
 	private ReadSession session ;
 	private NeoWorkspace wspace ;
-	private GraphDatabaseService graphDB ;
 	
 	WriteSession(ReadSession session, NeoWorkspace workspace) {
 		this.session = session ;
 		this.wspace = workspace ; 
-		this.graphDB = workspace.graphDB() ;
 	}
 	
 	
@@ -33,29 +31,31 @@ public class WriteSession extends NeoSession {
 		
 		while(rels.hasNext()){
 			WriteRelationship relationShip = rels.next();
-			if (relName.equals(relationShip.property(NeoConstant.ChildRelationName))){
+			if (relName.equals(relationShip.property(NeoConstant.RelationName))){
 				return relationShip.endNode() ;
 			}
 		}
 		
 		WriteNode result = newNode() ;
-		WriteRelationship relationShip = parent.createRelationshipTo(result, RelType.CHILD);
-		relationShip.property(NeoConstant.ChildRelationName, relName) ;
+		WriteRelationship relationShip = parent.createRelationshipTo(result, RelType.CHILD, relName);
 			
 		return result ;
 	}
 	
 	public WriteNode rootNode() {
-		return WriteNode.findBy(this, graphDB.getNodeById(0)) ;
+		return node(workspace().getNodeById(0)) ;
 	}
 	
 	WriteNode node(Node inner){
-		return WriteNode.findBy(this, inner) ;
+		return WriteNode.load(this, inner) ;
+	}
+	
+	WriteRelationship relation(Relationship inner){
+		return WriteRelationship.load(this, inner) ;
 	}
 	
 	public WriteNode newNode(){
-		Node newNode = graphDB.createNode() ;
-		return WriteNode.findBy(this, newNode) ;
+		return node(workspace().createNode()) ;
 	}
 	
 	public NeoWorkspace workspace() {
@@ -63,7 +63,7 @@ public class WriteSession extends NeoSession {
 	}
 
 	public SessionQuery<WriteNode> createQuery() {
-		return SessionQuery.create(wspace, this) ;
+		return SessionQuery.create(this) ;
 	}
 
 

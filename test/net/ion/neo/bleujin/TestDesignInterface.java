@@ -71,7 +71,7 @@ public class TestDesignInterface extends TestCase {
 				node.property("name", "bleujin") ;
 				
 				WriteRelationship rs = root.firstRelationShip(Direction.OUTGOING);
-				assertEquals("c1", rs.property(NeoConstant.ChildRelationName)) ;
+				assertEquals("c1", rs.property(NeoConstant.RelationName)) ;
 				
 				return 1 ;
 			}

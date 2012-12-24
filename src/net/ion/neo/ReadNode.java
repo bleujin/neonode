@@ -20,26 +20,25 @@ public class ReadNode extends NeoNode{
 		this.session = session ;
 	}
 	
-	public static ReadNode findBy(ReadSession session, Node inner) {
+	public static ReadNode load(ReadSession session, Node inner) {
 		return new ReadNode(session, inner);
 	}
 
-	public ListIterable<ReadRelationship> relationShips(Direction direction){
-		return new IterableReadRelation(session, inner().getRelationships(direction)) ;
-	}
-	
-	public ListIterable<ReadRelationship> relationShips(Direction direction, RelationshipType rtype){
-		return new IterableReadRelation(session, inner().getRelationships(direction, rtype)) ;
-	}
-	
 	public ListIterable<ReadRelationship> relationShips(Direction direction, RelationshipType... rtypes){
+		if (rtypes.length == 0){
+			return new IterableReadRelation(session, inner().getRelationships(direction)) ;
+		}
 		return new IterableReadRelation(session, inner().getRelationships(direction, rtypes)) ;
 	}
 	
 	
-	
-	public ReadRelationship firstRelationShip(Direction direction, RelationshipType rtype){
-		Iterator<Relationship> rels = inner().getRelationships(direction, rtype).iterator();
+	public ReadRelationship firstRelationShip(Direction direction, RelationshipType... rtypes){
+		Iterator<Relationship> rels = null ;
+		if (rtypes.length == 0){
+			rels = inner().getRelationships(direction).iterator() ;
+		} else {
+			rels = inner().getRelationships(direction, rtypes).iterator();
+		}
 		if (rels.hasNext()) {
 			return new ReadRelationship(session, rels.next()) ;
 		} else return null ;

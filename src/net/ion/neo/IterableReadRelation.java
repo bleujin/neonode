@@ -9,7 +9,7 @@ import net.ion.neo.util.ListIterable;
 
 import org.neo4j.graphdb.Relationship;
 
-public class IterableReadRelation implements ListIterable<ReadRelationship> {
+public class IterableReadRelation extends ListIterable<ReadRelationship> {
 
 	private IteratorReadRelation iterator ;
 	IterableReadRelation(ReadSession rsession, Iterable<Relationship> iterable) {
@@ -20,16 +20,6 @@ public class IterableReadRelation implements ListIterable<ReadRelationship> {
 	public Iterator<ReadRelationship> iterator() {
 		return iterator;
 	}
-
-	@Override
-	public List<ReadRelationship> toList() {
-		List<ReadRelationship> result = ListUtil.newList();
-		for (ReadRelationship rs : this) {
-			result.add(rs) ;
-		}
-		return result;
-	}
-
 }
 
 class IteratorReadRelation implements Iterator<ReadRelationship> {
