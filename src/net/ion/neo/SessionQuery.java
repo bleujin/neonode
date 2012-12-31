@@ -2,6 +2,7 @@ package net.ion.neo;
 
 import java.util.List;
 
+import net.ion.framework.util.IOUtil;
 import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.StringUtil;
 import net.ion.isearcher.common.IKeywordField;
@@ -27,6 +28,11 @@ public class SessionQuery<T extends NeoNode> {
 	private String queryString;
 	private List<SortField> sorts = ListUtil.newList();
 
+	private int limit = 100 ; // default limit
+	private int skip = 0 ;
+	private int offset = 100 ;
+	private boolean tradeForSpeed = false ;
+	
 	SessionQuery(NeoSession session) {
 		this.session = session;
 	}
@@ -65,12 +71,55 @@ public class SessionQuery<T extends NeoNode> {
 			Index<Node> indexer = session.workspace().indexTextNode();
 			QueryContext query = createQuery(queryString);
 
-			return NodeCursor.create(session, indexer.query(query));
+			final IndexHits<Node> hits = indexer.query(query);
+			try {
+				int _skip = this.skip ;
+				int _offset = this.offset ;
+				
+				List<Node> hitNodes = ListUtil.newList() ;
+				while(_skip-- > 0){
+					if (hits.hasNext()) {
+						hits.next();
+					} else {
+						NodeCursor.create(session, ListUtil.EMPTY);
+						break ;
+					}
+				}
+				
+				while (_offset-- > 0 && hits.hasNext()) {
+					hitNodes.add(hits.next());
+				}
+				
+				return NodeCursor.create(session, hitNodes);
+			} finally {
+				if (hits != null) hits.close() ;
+			} 
 		} catch (ParseException ex) {
 			throw new IllegalArgumentException(ex);
 		}
 	}
+	
+	public SessionQuery<T> tradeForSpeed(boolean tradeForSpeed){
+		this.tradeForSpeed = tradeForSpeed ;
+		return this ;
+	}
+	
 
+	public SessionQuery<T> topDoc(int topDoc){
+		this.limit = Math.max(topDoc, 0) ;
+		return this ;
+	}
+	
+	public SessionQuery<T> skip(int skip){
+		this.skip = Math.max(skip, 0) ;
+		return this ;
+	}
+	
+	public SessionQuery<T> offset(int offset){
+		this.offset = Math.max(offset, 0) ;
+		return this ;
+	}
+	
 	private QueryContext createQuery(String queryString) throws ParseException {
 		Query query = null ;
 		if (StringUtil.isBlank(queryString)) {
@@ -83,7 +132,11 @@ public class SessionQuery<T extends NeoNode> {
 		QueryContext context = new QueryContext(query).defaultOperator(Operator.AND);
 		if (!sorts.isEmpty()) {
 			context.sort(new Sort(sorts.toArray(new SortField[0])));
+		} else {
+			context.sortByScore() ;
 		}
+		if (tradeForSpeed) context.tradeCorrectnessForSpeed() ;
+		context.top(limit) ;
 
 		return context;
 	}

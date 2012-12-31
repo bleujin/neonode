@@ -1,5 +1,7 @@
 package net.ion.neo;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import net.ion.framework.db.Page;
@@ -12,52 +14,42 @@ import net.ion.neo.util.DebugPrinter;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.index.IndexHits;
 
-public class NodeCursor<T extends NeoNode> {
+public class NodeCursor<T extends NeoNode> implements Iterator<T>, Iterable<T> {
 
 	private NeoSession<T, ?> session ;
-	private IndexHits<Node> hits ;
-	private NodeCursor(NeoSession session, IndexHits<Node> hits) {
+	private Iterator<Node> iter ;
+	private List<Node> hits ;
+	private NodeCursor(NeoSession session, List<Node> hits) {
 		this.session = session ;
 		this.hits = hits ;
+		this.iter = hits.iterator() ;
 	}
 
-	static NodeCursor create(NeoSession session, IndexHits<Node> hits) {
+	static NodeCursor create(NeoSession session, List<Node> hits) {
 		return new NodeCursor(session, hits);
 	}
 
-	public void debugPrint(Page page) {
-		each(page, new DebugPrinter<T>());
+	public void debugPrint() {
+		each(new DebugPrinter<T>());
 	}
 	
-	public void each(Page page, Closure closure) {
-		CollectionUtil.each(toList(page), closure);
+	public void each(Closure<T> closure) {
+		CollectionUtil.each(toList(), closure);
 	}
 
 	public T next(){
-		return session.node(hits.next());
+		return session.node(iter.next());
 	}
 	public void close(){
-		hits.close() ;
+		//
 	}
 	
-	public List<T> toList(Page page) {
-		int pageIndexOnScreen = page.getPageNo() - page.getMinPageNoOnScreen() ;
-		return toList(pageIndexOnScreen * page.getListNum(), page.getListNum());
-	}
-
-	public List<T> toList(int skip, int limit) {
-		while (skip-- > 0) {
-			if (hits.hasNext()) {
-				hits.next();
-			} else {
-				return ListUtil.EMPTY;
-			}
+	public List<T> toList() {
+		List<T> result = ListUtil.newList() ;
+		for (Node node : hits) {
+			result.add(session.node(node)) ;
 		}
-		List<T> result = ListUtil.newList();
-		while (limit-- > 0 && hits.hasNext()) {
-			result.add((T)session.node(hits.next()));
-		}
-		return result;
+		return result ;
 	}
 
 	public int count() {
@@ -65,11 +57,26 @@ public class NodeCursor<T extends NeoNode> {
 	}
 
 	public T first() {
-		if (! hits.hasNext()){
-			return null ;
+		if (count() > 0){
+			return (T) session.node(hits.get(0)) ;
 		} else {
-			return (T) session.node(hits.next()) ;
+			return null ;
 		}
+	}
+
+	@Override
+	public boolean hasNext() {
+		return iter.hasNext();
+	}
+
+	@Override
+	public void remove() {
+		throw new UnsupportedOperationException("remove not supported") ;
+	}
+
+	@Override
+	public Iterator<T> iterator() {
+		return this;
 	}
 
 }

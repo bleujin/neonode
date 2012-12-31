@@ -5,6 +5,7 @@ import java.util.Iterator;
 import net.ion.framework.util.Debug;
 import net.ion.neo.NeoWorkspace.RelType;
 
+import org.neo4j.cypher.javacompat.ExecutionEngine;
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
@@ -24,10 +25,9 @@ public class WriteSession extends NeoSession<WriteNode, WriteRelationship> {
 		this.wspace = workspace ; 
 	}
 	
-	
-	WriteNode mergeChildNode(WriteNode parent, String relName) {
+	WriteNode mergeRelationNode(WriteNode parent, RelationshipType rtype, String relName) {
 		
-		Iterator<WriteRelationship> rels = parent.relationShips(Direction.OUTGOING, RelType.CHILD).iterator() ;
+		Iterator<WriteRelationship> rels = parent.relationShips(Direction.OUTGOING, rtype).iterator() ;
 		
 		while(rels.hasNext()){
 			WriteRelationship relationShip = rels.next();
@@ -37,11 +37,17 @@ public class WriteSession extends NeoSession<WriteNode, WriteRelationship> {
 		}
 		
 		WriteNode result = newNode() ;
-		WriteRelationship relationShip = parent.createRelationshipTo(result, RelType.CHILD, relName);
+		WriteRelationship relationShip = parent.createRelationshipTo(result, rtype, relName);
 			
 		return result ;
 	}
-	
+
+	WriteNode createRelationNode(WriteNode parent, RelationshipType rtype, String relName) {
+		WriteNode result = newNode() ;
+		WriteRelationship relationShip = parent.createRelationshipTo(result, rtype, relName);
+		return result ;
+	}
+
 	public WriteNode rootNode() {
 		return node(workspace().getNodeById(0)) ;
 	}
@@ -66,5 +72,13 @@ public class WriteSession extends NeoSession<WriteNode, WriteRelationship> {
 		return SessionQuery.create(this) ;
 	}
 
+
+	public ExecutionEngine executionEngine() {
+		return wspace.executionEngine() ;
+	}
+
+	public RelationQuery<WriteRelationship> relationshipQuery() {
+		return RelationQuery.create(this) ;
+	}
 
 }

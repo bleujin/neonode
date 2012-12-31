@@ -37,10 +37,10 @@ public class TestFirst extends TestCase {
 			public Void handle(WriteSession tsession) {
 				WriteNode root = tsession.rootNode();
 				
-				WriteNode hello = root.mergeChild("hello") ;
+				WriteNode hello = root.mergeRelationNode(RelType.CHILD, "hello") ;
 				hello.property("pkey", "Hello") ;
 				
-				WriteNode world = root.mergeChild("world") ;
+				WriteNode world = root.mergeRelationNode(RelType.CHILD, "world") ;
 				world.property("pkey", "World") ;
 				
 				WriteRelationship relation = hello.createRelationshipTo(world, RelType.create("KNOW"));
@@ -49,7 +49,7 @@ public class TestFirst extends TestCase {
 			}
 		}).get() ;
 		
-		session.createQuery().find().debugPrint(Page.ALL) ;
+		session.createQuery().find().debugPrint() ;
 		session.rootNode().relationShips(Direction.OUTGOING, RelType.CHILD).debugPrint(Page.ALL) ;
 	}
 	

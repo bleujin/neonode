@@ -32,7 +32,7 @@ public class TestCreateNode extends TestNeoNodeBase {
 		session.tran(new TransactionJob<Void>() {
 			@Override
 			public Void handle(WriteSession tsession) {
-				WriteNode newNode = tsession.rootNode().mergeChild("bleujin") ;
+				WriteNode newNode = tsession.rootNode().mergeRelationNode(RelType.CHILD, "bleujin") ;
 				newNode.property("age", 20) ;
 				return null;
 			}

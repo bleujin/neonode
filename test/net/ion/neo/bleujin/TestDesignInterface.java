@@ -16,6 +16,7 @@ import net.ion.neo.TransactionJob;
 import net.ion.neo.WriteNode;
 import net.ion.neo.WriteRelationship;
 import net.ion.neo.WriteSession;
+import net.ion.neo.NeoWorkspace.RelType;
 
 public class TestDesignInterface extends TestCase {
 
@@ -67,7 +68,7 @@ public class TestDesignInterface extends TestCase {
 		session.tran(new TransactionJob<Integer>(){
 			public Integer handle(WriteSession ws){
 				WriteNode root = ws.rootNode();
-				WriteNode node = root.mergeChild("c1");
+				WriteNode node = root.mergeRelationNode(RelType.CHILD, "c1");
 				node.property("name", "bleujin") ;
 				
 				WriteRelationship rs = root.firstRelationShip(Direction.OUTGOING);

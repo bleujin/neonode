@@ -10,6 +10,7 @@ import net.ion.neo.TestNeoNodeBase;
 import net.ion.neo.TransactionJob;
 import net.ion.neo.WriteNode;
 import net.ion.neo.WriteSession;
+import net.ion.neo.NeoWorkspace.RelType;
 
 public class TestFirstCUD extends TestNeoNodeBase {
 	
@@ -48,7 +49,7 @@ public class TestFirstCUD extends TestNeoNodeBase {
 			}
 		}).get() ;
 		
-		session.createQuery().find().debugPrint(Page.ALL) ;
+		session.createQuery().find().debugPrint() ;
 	}
 
 	public void testDelete() throws Exception {
@@ -56,10 +57,10 @@ public class TestFirstCUD extends TestNeoNodeBase {
 		session.tran(new TransactionJob<Void>() {
 			@Override
 			public Void handle(WriteSession tsession) {
-				WriteNode newNode = tsession.rootNode().mergeChild("child") ;
+				WriteNode newNode = tsession.rootNode().mergeRelationNode(RelType.CHILD, "child") ;
 				newNode.property("name", "bleujin").property("age", 20) ;
 				
-				newNode.mergeChild("grandchild").property("name", "hero") ;
+				newNode.mergeRelationNode(RelType.CHILD, "grandchild").property("name", "hero") ;
 				return null;
 			}
 		}).get() ;
@@ -73,7 +74,7 @@ public class TestFirstCUD extends TestNeoNodeBase {
 			}
 		}).get() ;
 		
-		session.createQuery().find().debugPrint(Page.ALL) ;
+		session.createQuery().find().debugPrint() ;
 	}
 	
 	
@@ -100,10 +101,10 @@ public class TestFirstCUD extends TestNeoNodeBase {
 		session.tran(new TransactionJob<Void>() {
 			@Override
 			public Void handle(WriteSession tsession) {
-				WriteNode newNode = tsession.rootNode().mergeChild("child") ;
+				WriteNode newNode = tsession.rootNode().mergeRelationNode(RelType.CHILD, "child") ;
 				newNode.property("name", "bleujin").property("age", 20) ;
 				
-				newNode.mergeChild("grandchild").property("name", "hero") ;
+				newNode.mergeRelationNode(RelType.CHILD, "grandchild").property("name", "hero") ;
 				return null;
 			}
 		}).get() ;

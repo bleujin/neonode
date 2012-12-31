@@ -30,10 +30,10 @@ public class TestFirstCypher extends TestNeoNodeBase{
 				WriteNode root = tsession.rootNode();
 				root.property("name", "root") ;
 				
-				WriteNode bleujin = root.mergeChild("bleujin").property("name", "bleujin").property("age", 20).property("text", "태극기가 바람에 펄럭입니다");
-				WriteNode hero = root.mergeChild("hero").property("name", "hero").property("age", 25).propertyWithoutIndex("noindex", 3);
+				WriteNode bleujin = root.mergeRelationNode(RelType.CHILD, "bleujin").property("name", "bleujin").property("age", 20).property("text", "태극기가 바람에 펄럭입니다");
+				WriteNode hero = root.mergeRelationNode(RelType.CHILD, "hero").property("name", "hero").property("age", 25).propertyWithoutIndex("noindex", 3);
 				
-				hero.mergeChild("jin").property("name", "jin").property("age", 25).property("val", 3);
+				hero.mergeRelationNode(RelType.CHILD, "jin").property("name", "jin").property("age", 25).property("val", 3);
 				
 				bleujin.createRelationshipTo(hero, RelType.create("know")).property("type", "friend") ;
 				return null;
@@ -47,7 +47,9 @@ public class TestFirstCypher extends TestNeoNodeBase{
 		Map<String, Object> params = MapUtil.newMap() ;
 		params.put( "id", 0 );
 		
+		long start = System.currentTimeMillis() ;
 		ExecutionResult result = engine.execute("start n=node({id}) match (n)--> (x) return n.name, x.name", params);
+		Debug.line(System.currentTimeMillis() - start) ;
 		
 		Debug.line(result.getQueryStatistics(), result.columns(), result) ;
 		
@@ -56,6 +58,6 @@ public class TestFirstCypher extends TestNeoNodeBase{
 		for (Map<String, Object> map : result) {
 			Debug.line(map) ;
 		}
-		
+
 	}
 }

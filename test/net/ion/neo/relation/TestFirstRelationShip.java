@@ -13,12 +13,16 @@ import org.neo4j.graphdb.Direction;
 
 public class TestFirstRelationShip extends TestNeoNodeBase{
 
-	public void testCreateRelation() throws Exception {
+	
+	
+	
+	
+	public void testMergeRelation() throws Exception {
 		session.workspace().clear() ;
 		session.tran(new TransactionJob<Void>() {
 			@Override
 			public Void handle(WriteSession tsession) {
-				WriteNode hero = tsession.rootNode().mergeChild("emanon").property("name", "hero");
+				WriteNode hero = tsession.rootNode().mergeRelationNode(RelType.CHILD, "emanon").property("name", "hero");
 				WriteNode bleujin = tsession.newNode().property("name", "bleujin");
 				
 				WriteRelationship rel = bleujin.createRelationshipTo(hero, RelType.create("friend"));

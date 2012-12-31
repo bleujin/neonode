@@ -68,9 +68,15 @@ public class WriteNode extends NeoNode {
 		return new WriteRelationship(wsession, relationShip).property(NeoConstant.RelationName, relName);
 	}
 
-	public WriteNode mergeChild(String relName) {
-		return wsession.mergeChildNode(this, relName) ;
+	public WriteNode mergeRelationNode(RelationshipType rtype, String relName) {
+		return wsession.mergeRelationNode(this, rtype, relName) ;
 	}
+
+	public WriteNode createRelationNode(RelationshipType rtype, String relName) {
+		return wsession.createRelationNode(this, rtype, relName) ;
+	}
+
+
 
 	public void remove() {
 		final Node node = inner();

@@ -3,6 +3,7 @@ package net.ion.neo.index.impl.lucene;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.ion.isearcher.common.MyDocument;
 import net.ion.neo.index.impl.lucene.LuceneTransaction.CommandList;
 
 import org.apache.lucene.document.Document;
@@ -66,7 +67,7 @@ class CommitContext {
 		final long entityId;
 
 		DocumentContext(Document document, boolean exists, long entityId) {
-			this.document = document;
+			this.document = document; 
 			this.exists = exists;
 			this.entityId = entityId;
 		}

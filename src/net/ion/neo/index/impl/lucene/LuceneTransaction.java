@@ -1,5 +1,7 @@
 package net.ion.neo.index.impl.lucene;
 
+import static net.ion.isearcher.common.IKeywordField.ISALL_FIELD;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -9,6 +11,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
+import net.ion.framework.util.Debug;
+import net.ion.isearcher.common.IKeywordField;
 import net.ion.neo.index.impl.lucene.CommitContext.DocumentContext;
 import net.ion.neo.index.impl.lucene.LuceneCommand.CreateIndexCommand;
 import net.ion.neo.index.impl.lucene.LuceneCommand.DeleteCommand;
@@ -16,6 +20,11 @@ import net.ion.neo.index.impl.lucene.LuceneCommand.RemoveCommand;
 import net.ion.neo.index.lucene.QueryContext;
 import net.ion.neo.index.lucene.ValueContext;
 
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.document.Fieldable;
+import org.apache.lucene.document.Field.Index;
+import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
@@ -234,18 +243,31 @@ class LuceneTransaction extends XaTransaction {
 
 	private void applyDocuments(IndexWriter writer, IndexType type, Map<Long, DocumentContext> documents) throws IOException {
 		for (Map.Entry<Long, DocumentContext> entry : documents.entrySet()) {
+
 			DocumentContext context = entry.getValue();
 			if (context.exists) {
 				if (LuceneDataSource.documentIsEmpty(context.document)) {
 					writer.deleteDocuments(type.idTerm(context.entityId));
 				} else {
-					writer.updateDocument(type.idTerm(context.entityId), context.document);
+					writer.updateDocument(type.idTerm(context.entityId), toMyDocument(context.document));
 				}
 			} else {
-				writer.addDocument(context.document);
+				writer.addDocument(toMyDocument(context.document));
 			}
 		}
 	}
+	
+	private Document toMyDocument(Document ori){
+		ori.removeField(IKeywordField.ISALL_FIELD) ;
+		StringBuilder bodyBuilder = new StringBuilder() ;
+		for (Fieldable field : ori.getFields()) {
+			bodyBuilder.append(field.stringValue()) ;
+			bodyBuilder.append(" ") ;
+		}
+		ori.add(new Field(ISALL_FIELD, bodyBuilder.toString(), Store.NO, Index.ANALYZED)) ;
+		return ori ;
+	}
+	
 
 	private void closeTxData() {
 		for (TxDataBoth data : this.txData.values()) {

@@ -31,8 +31,8 @@ public class TestFirstQuery extends TestNeoNodeBase {
 				
 				WriteNode root = tsession.rootNode();
 				
-				WriteNode bleujin = root.mergeChild("bleujin").property("name", "bleujin").property("age", 20).property("text", "태극기가 바람에 펄럭입니다");
-				WriteNode hero = root.mergeChild("hero").property("name", "hero").property("age", 25).propertyWithoutIndex("noindex", 3);
+				WriteNode bleujin = root.mergeRelationNode(RelType.CHILD, "bleujin").property("name", "bleujin").property("age", 20).property("text", "태극기가 바람에 펄럭입니다");
+				WriteNode hero = root.mergeRelationNode(RelType.CHILD, "hero").property("name", "hero").property("age", 25).propertyWithoutIndex("noindex", 3);
 				
 				bleujin.createRelationshipTo(hero, RelType.create("know")).property("type", "friend") ;
 				return null;
@@ -43,7 +43,7 @@ public class TestFirstQuery extends TestNeoNodeBase {
 	public void testParseQuery() throws Exception {
 		NodeCursor<ReadNode> nc = session.createQuery().parseQuery("age:[20 TO 30]").find();
 		assertEquals(2, nc.count()) ;
-		nc.debugPrint(Page.ALL) ;
+		nc.debugPrint() ;
 	}
 
 	
@@ -72,8 +72,8 @@ public class TestFirstQuery extends TestNeoNodeBase {
 			}
 		}).get() ;
 		
-		NodeCursor<ReadNode> nc = session.createQuery().parseQuery("name:all").ascending("index").find() ;
-		final List<ReadNode> list = nc.toList(Page.create(10, 1));
+		NodeCursor<ReadNode> nc = session.createQuery().parseQuery("name:all").ascending("index").topDoc(10).find() ;
+		final List<ReadNode> list = nc.toList();
 		assertEquals(10, list.size()) ;
 		
 		assertEquals(0, list.get(0).property("index")) ;

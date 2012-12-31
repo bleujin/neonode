@@ -564,7 +564,8 @@ public class LuceneDataSource extends LogBackedXaDataSource {
 	static boolean documentIsEmpty(Document document) {
 		List<Fieldable> fields = document.getFields();
 		for (Fieldable field : fields) {
-			if (!LuceneIndex.KEY_DOC_ID.equals(field.name())) {
+			if (LuceneIndex.KEY_DOC_ID.equals(field.name()) || field.name().startsWith("IS-")) continue ;
+			else {
 				return false;
 			}
 		}

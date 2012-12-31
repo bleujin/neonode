@@ -56,4 +56,8 @@ public class ReadSession extends NeoSession<ReadNode, ReadRelationship>{
 	public RelationQuery<ReadRelationship> relationshipQuery() {
 		return RelationQuery.create(this) ;
 	}
+
+	public ReadNode findById(long id) {
+		return node(wspace.getNodeById(id));
+	}
 }
