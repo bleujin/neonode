@@ -5,6 +5,8 @@ import org.neo4j.graphdb.Relationship;
 
 public abstract class NeoSession<T, R> {
 
+	public abstract T rootNode() ;
+	
 	abstract T node(Node inner) ;
 	
 	abstract R relation(Relationship inner) ;

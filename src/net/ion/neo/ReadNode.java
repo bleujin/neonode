@@ -1,5 +1,6 @@
 package net.ion.neo;
 
+import net.ion.framework.util.ListUtil;
 import net.ion.neo.util.ListIterable;
 
 import org.neo4j.graphdb.Direction;
@@ -33,8 +34,9 @@ public class ReadNode extends NeoNode{
 		return relationShips(direction, rtypes).first() ;
 	}
 	
-	public NeoTraverser<NeoPath<ReadNode, ReadRelationship>> traverse(TraversalDescription td) {
-		return NeoTraverser.create(session, td.traverse(inner())) ;
+	public NeoTraversalDescription<ReadNode, ReadRelationship> traversal() {
+		return NeoTraversalDescription.create(ListUtil.toList(this), session) ;
 	}
+
 
 }

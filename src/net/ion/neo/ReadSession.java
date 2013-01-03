@@ -45,7 +45,7 @@ public class ReadSession extends NeoSession<ReadNode, ReadRelationship>{
 		return wspace.tran(this, tjob, TranExceptionHandler.PRINT) ;
 	}
 
-	public SessionQuery<ReadNode> createQuery() {
+	public SessionQuery<ReadNode, ReadRelationship> createQuery() {
 		return SessionQuery.create(this) ;
 	}
 

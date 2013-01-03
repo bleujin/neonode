@@ -15,7 +15,7 @@ public abstract class NeoPath<T, R> {
 		return path.length() ;
 	}
 
-	public abstract T staratNode() ;
+	public abstract T startNode() ;
 	public abstract T endNode() ;
 	public abstract ListIterable<T> nodes() ;
 	
@@ -43,7 +43,7 @@ class ReadNeoPath extends NeoPath<ReadNode, ReadRelationship>{
 		return path.length() ;
 	}
 
-	public ReadNode staratNode(){
+	public ReadNode startNode(){
 		return session.node(path.startNode()) ;
 	}
 
@@ -80,7 +80,7 @@ class WriteNeoPath extends NeoPath<WriteNode, WriteRelationship>{
 		return path.length() ;
 	}
 
-	public WriteNode staratNode(){
+	public WriteNode startNode(){
 		return session.node(path.startNode()) ;
 	}
 

@@ -8,11 +8,12 @@ import net.ion.framework.util.CollectionUtil;
 import net.ion.framework.util.ListUtil;
 import net.ion.neo.util.DebugPrinter;
 
+import org.apache.ecs.xhtml.s;
 import org.neo4j.graphdb.Node;
 
-public class NodeCursor<T extends NeoNode> implements Iterator<T>, Iterable<T> {
+public class NodeCursor<T extends NeoNode, R extends NeoRelationship> implements Iterator<T>, Iterable<T> {
 
-	private NeoSession<T, ?> session ;
+	private NeoSession<T, R> session ;
 	private Iterator<Node> iter ;
 	private List<Node> hits ;
 	private NodeCursor(NeoSession session, List<Node> hits) {
@@ -74,5 +75,6 @@ public class NodeCursor<T extends NeoNode> implements Iterator<T>, Iterable<T> {
 	public Iterator<T> iterator() {
 		return this;
 	}
+
 
 }

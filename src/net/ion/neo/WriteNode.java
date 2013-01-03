@@ -2,6 +2,7 @@ package net.ion.neo;
 
 import java.util.Iterator;
 
+import net.ion.framework.util.ListUtil;
 import net.ion.neo.util.ListIterable;
 
 import org.neo4j.graphdb.Direction;
@@ -78,10 +79,10 @@ public class WriteNode extends NeoNode {
 		node.delete() ;
 	}
 
-	public NeoTraverser<NeoPath<WriteNode, WriteRelationship>> traverse(TraversalDescription td) {
-		return NeoTraverser.create(wsession, td.traverse(inner())) ;
+	public NeoTraversalDescription<WriteNode, WriteRelationship> traversal() {
+		return NeoTraversalDescription.create(ListUtil.toList(this), wsession) ;
 	}
 
-
+	
 
 }

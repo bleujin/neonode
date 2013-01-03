@@ -9,6 +9,7 @@ import net.ion.neo.NodeCursor;
 import net.ion.neo.TestNeoNodeBase;
 import net.ion.neo.TransactionJob;
 import net.ion.neo.WriteNode;
+import net.ion.neo.WriteRelationship;
 import net.ion.neo.WriteSession;
 import net.ion.neo.NeoWorkspace.RelType;
 
@@ -42,7 +43,7 @@ public class TestSpeed extends TestNeoNodeBase {
 		session.tran(new TransactionJob<Void>() {
 			@Override
 			public Void handle(WriteSession tsession) {
-				NodeCursor<WriteNode> nc = tsession.createQuery().find();
+				NodeCursor<WriteNode, WriteRelationship> nc = tsession.createQuery().find();
 				final WriteNode root = tsession.rootNode();
 				nc.each(new Closure<WriteNode>() {
 					@Override

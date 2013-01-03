@@ -6,9 +6,11 @@ import java.util.List;
 import net.ion.framework.util.ListUtil;
 import net.ion.neo.NodeCursor;
 import net.ion.neo.ReadNode;
+import net.ion.neo.ReadRelationship;
 import net.ion.neo.TestNeoNodeBase;
 import net.ion.neo.TransactionJob;
 import net.ion.neo.WriteNode;
+import net.ion.neo.WriteRelationship;
 import net.ion.neo.WriteSession;
 
 public class TestPaging extends TestNeoNodeBase{
@@ -30,7 +32,7 @@ public class TestPaging extends TestNeoNodeBase{
 			}
 		}).get() ;
 		
-		NodeCursor<ReadNode> nc = session.createQuery().parseQuery("name:bleujin").ascending("idx").skip(10).offset(10).find();
+		NodeCursor<ReadNode, ReadRelationship> nc = session.createQuery().parseQuery("name:bleujin").ascending("idx").skip(10).offset(10).find();
 		assertEquals(10, nc.toList().get(0).property("idx")) ;
 		assertEquals(19, nc.toList().get(9).property("idx")) ;
 		
@@ -41,11 +43,11 @@ public class TestPaging extends TestNeoNodeBase{
 				
 				tsession.newNode().property("idx", -1).property("name", "bleujin");
 				
-				NodeCursor<WriteNode> nc = tsession.createQuery().parseQuery("name:bleujin").ascending("idx").skip(10).offset(10).find();
-				assertEquals(9, nc.toList().get(0).property("idx")) ;
-				assertEquals(18, nc.toList().get(9).property("idx")) ;
+				NodeCursor<WriteNode, WriteRelationship> wnc = tsession.createQuery().parseQuery("name:bleujin").ascending("idx").skip(10).offset(10).find();
+				assertEquals(9, wnc.toList().get(0).property("idx")) ;
+				assertEquals(18, wnc.toList().get(9).property("idx")) ;
 				
-				nc.debugPrint() ;
+				wnc.debugPrint() ;
 				return null;
 			}
 		}).get() ;

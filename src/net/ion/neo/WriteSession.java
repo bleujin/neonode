@@ -61,7 +61,7 @@ public class WriteSession extends NeoSession<WriteNode, WriteRelationship> {
 		return wspace;
 	}
 
-	public SessionQuery<WriteNode> createQuery() {
+	public SessionQuery<WriteNode, WriteRelationship> createQuery() {
 		return SessionQuery.create(this) ;
 	}
 

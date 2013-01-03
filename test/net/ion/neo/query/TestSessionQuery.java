@@ -4,6 +4,7 @@ import net.ion.framework.util.Debug;
 import net.ion.framework.util.RandomUtil;
 import net.ion.neo.NodeCursor;
 import net.ion.neo.ReadNode;
+import net.ion.neo.ReadRelationship;
 import net.ion.neo.TestNeoNodeBase;
 import net.ion.neo.TransactionJob;
 import net.ion.neo.WriteNode;
@@ -31,7 +32,7 @@ public class TestSessionQuery extends TestNeoNodeBase {
 	}
 	
 	public void testIterable() throws Exception {
-		NodeCursor<ReadNode> nc = session.createQuery().ascending("idx").find();
+		NodeCursor<ReadNode, ReadRelationship> nc = session.createQuery().ascending("idx").find();
 		for (ReadNode node : nc) {
 			Debug.line(node) ;
 		}
@@ -39,7 +40,7 @@ public class TestSessionQuery extends TestNeoNodeBase {
 	
 	public void testSkip() throws Exception {
 		long start = System.currentTimeMillis() ;
-		NodeCursor<ReadNode> nc = session.createQuery().ascending("idx").skip(2).offset(5).topDoc(5).tradeForSpeed(true).find();
+		NodeCursor<ReadNode, ReadRelationship> nc = session.createQuery().ascending("idx").skip(2).offset(5).topDoc(5).tradeForSpeed(true).find();
 		nc.debugPrint() ;
 		
 		assertEquals(3, nc.count()) ;

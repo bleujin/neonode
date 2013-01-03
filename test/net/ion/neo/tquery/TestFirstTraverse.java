@@ -2,6 +2,7 @@ package net.ion.neo.tquery;
 
 import net.ion.framework.util.Debug;
 import net.ion.neo.NeoPath;
+import net.ion.neo.NeoTraversalDescription;
 import net.ion.neo.NeoTraverser;
 import net.ion.neo.ReadNode;
 import net.ion.neo.ReadRelationship;
@@ -20,58 +21,78 @@ import org.neo4j.kernel.Traversal;
 public class TestFirstTraverse extends TestNeoNodeBase {
 
 	public void setUp() throws Exception {
-		super.setUp() ;
-		session.dropWorkspace() ;
-		
+		super.setUp();
+		session.dropWorkspace();
+
 		session.tran(new TransactionJob<Void>() {
 			@Override
 			public Void handle(WriteSession tsession) {
-				
+
 				WriteNode root = tsession.rootNode();
-				root.property("name", "root") ;
-				
+				root.property("name", "root");
+
 				WriteNode bleujin = root.mergeRelationNode(RelType.CHILD, "bleujin").property("name", "bleujin").property("age", 20).property("text", "태극기가 바람에 펄럭입니다");
 				WriteNode hero = root.mergeRelationNode(RelType.CHILD, "hero").property("name", "hero").property("age", 25).propertyWithoutIndex("noindex", 3);
-				
-				bleujin.createRelationshipTo(hero, RelType.CHILD).property("type", "friend") ;
+
+				bleujin.createRelationshipTo(hero, RelType.CHILD).property("type", "friend");
 				return null;
 			}
-		}).get() ;
+		}).get();
 	}
 
-	
-	public void testTraverse() throws Exception {
-		TraversalDescription td = Traversal.description().breadthFirst().relationships(RelType.CHILD, Direction.OUTGOING).evaluator(Evaluators.excludeStartPosition());
-		
-		NeoTraverser<NeoPath<ReadNode, ReadRelationship>> nt = session.rootNode().traverse(td);
+	public void testQueryTraverse() throws Exception {
+		NeoTraverser<NeoPath<ReadNode, ReadRelationship>> nt = session.createQuery().parseQuery("name:root").traversal().breadthFirst().relationships(RelType.CHILD, Direction.OUTGOING).evaluator(Evaluators.excludeStartPosition()).traverse();
 		for (NeoPath<ReadNode, ReadRelationship> neoPath : nt) {
-			Debug.line(neoPath.staratNode(), neoPath.endNode()) ;
-		} 
+			Debug.line(neoPath.startNode(), neoPath.endNode());
+		}
+
+		session.tran(new TransactionJob<Void>() {
+			@Override
+			public Void handle(WriteSession tsession) {
+				NeoTraverser<NeoPath<WriteNode, WriteRelationship>> wnt = tsession.createQuery().parseQuery("name:root").traversal().breadthFirst().relationships(RelType.CHILD, Direction.OUTGOING).evaluator(Evaluators.excludeStartPosition()).traverse();
+				for (NeoPath<WriteNode, WriteRelationship> neoPath : wnt) {
+					Debug.line(neoPath.startNode(), neoPath.endNode());
+				}
+
+				return null;
+			}
+		}).get();
+
+		
+		NeoTraverser<NeoPath<ReadNode, ReadRelationship>> listnt = NeoTraversalDescription.create(session.createQuery().parseQuery("name:root").find().toList(), session).breadthFirst().relationships(RelType.CHILD, Direction.OUTGOING).evaluator(Evaluators.excludeStartPosition()).traverse();
+		
 	}
 	
+	
+
+	public void testTraverse() throws Exception {
+		NeoTraverser<NeoPath<ReadNode, ReadRelationship>> nt = session.rootNode().traversal().breadthFirst().relationships(RelType.CHILD, Direction.OUTGOING).evaluator(Evaluators.excludeStartPosition()).traverse();
+		for (NeoPath<ReadNode, ReadRelationship> neoPath : nt) {
+			Debug.line(neoPath.startNode(), neoPath.endNode());
+		}
+	}
+
 	public void testWriteTraverse() throws Exception {
 		session.tran(new TransactionJob<Void>() {
 			@Override
 			public Void handle(WriteSession tsession) {
-				TraversalDescription td = Traversal.description().breadthFirst().relationships(RelType.CHILD, Direction.OUTGOING).evaluator(Evaluators.excludeStartPosition());
-				NeoTraverser<NeoPath<WriteNode, WriteRelationship>> nt = tsession.rootNode().traverse(td);
-				
+
+				NeoTraverser<NeoPath<WriteNode, WriteRelationship>> nt = tsession.rootNode().traversal().breadthFirst().relationships(RelType.CHILD, Direction.OUTGOING).evaluator(Evaluators.excludeStartPosition()).traverse() ;
+
 				for (NeoPath<WriteNode, WriteRelationship> neoPath : nt) {
-					neoPath.relationships().first().property("mod", "modRel") ;
-				} 
+					neoPath.relationships().first().property("mod", "modRel");
+				}
 				return null;
 			}
-		}).get() ;
+		}).get();
 
-		TraversalDescription td = Traversal.description().breadthFirst().relationships(RelType.CHILD, Direction.OUTGOING).evaluator(Evaluators.toDepth(1));
-		
-		NeoTraverser<NeoPath<ReadNode, ReadRelationship>> nt = session.rootNode().traverse(td);
+		long start = System.currentTimeMillis();
+		NeoTraverser<NeoPath<ReadNode, ReadRelationship>> nt = session.rootNode().traversal().breadthFirst().relationships(RelType.CHILD, Direction.OUTGOING).evaluator(Evaluators.toDepth(1)).traverse() ;
 		for (NeoPath<ReadNode, ReadRelationship> neoPath : nt) {
-			Debug.line(neoPath.staratNode(), neoPath.endNode(), neoPath.relationships().first()) ;
-		} 
+			Debug.line(neoPath.startNode(), neoPath.endNode(), neoPath.relationships().first());
+		}
 
+		Debug.line(System.currentTimeMillis() - start);
 	}
-	
-	
-	
+
 }

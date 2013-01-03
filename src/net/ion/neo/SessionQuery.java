@@ -20,8 +20,9 @@ import org.apache.lucene.util.Version;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.index.Index;
 import org.neo4j.graphdb.index.IndexHits;
+import org.neo4j.graphdb.traversal.TraversalDescription;
 
-public class SessionQuery<T extends NeoNode> {
+public class SessionQuery<T extends NeoNode, R extends NeoRelationship> {
 
 	private NeoSession session;
 	private String queryString;
@@ -37,35 +38,35 @@ public class SessionQuery<T extends NeoNode> {
 	}
 
 	public static <T> SessionQuery create(NeoSession session) {
-		return new SessionQuery<ReadNode>(session);
+		return new SessionQuery<ReadNode, ReadRelationship>(session);
 	}
 
-	public SessionQuery<T> parseQuery(String queryString) {
+	public SessionQuery<T, R> parseQuery(String queryString) {
 		this.queryString = queryString;
 		return this;
 	}
 
-	public SessionQuery<T> ascending(String propId) {
+	public SessionQuery<T, R> ascending(String propId) {
 		sorts.add(new SortField(propId + MyField.SORT_POSTFIX, SortField.STRING));
 		return this;
 	}
 
-	public SessionQuery<T> ascending(String propId, int sortType) {
+	public SessionQuery<T, R> ascending(String propId, int sortType) {
 		sorts.add(new SortField(propId + MyField.SORT_POSTFIX, sortType));
 		return this;
 	}
 
-	public SessionQuery<T> descending(String propId) {
+	public SessionQuery<T, R> descending(String propId) {
 		sorts.add(new SortField(propId + MyField.SORT_POSTFIX, SortField.STRING, true));
 		return this;
 	}
 
-	public SessionQuery<T> descending(String propId, int sortType) {
+	public SessionQuery<T, R> descending(String propId, int sortType) {
 		sorts.add(new SortField(propId + MyField.SORT_POSTFIX, sortType, true));
 		return this;
 	}
 
-	public NodeCursor<T> find(){
+	public NodeCursor<T, R> find(){
 		try {
 			Index<Node> indexer = session.workspace().indexTextNode();
 			QueryContext query = createQuery(queryString);
@@ -98,23 +99,23 @@ public class SessionQuery<T extends NeoNode> {
 		}
 	}
 	
-	public SessionQuery<T> tradeForSpeed(boolean tradeForSpeed){
+	public SessionQuery<T, R> tradeForSpeed(boolean tradeForSpeed){
 		this.tradeForSpeed = tradeForSpeed ;
 		return this ;
 	}
 	
 
-	public SessionQuery<T> topDoc(int topDoc){
+	public SessionQuery<T, R> topDoc(int topDoc){
 		this.limit = Math.max(topDoc, 0) ;
 		return this ;
 	}
 	
-	public SessionQuery<T> skip(int skip){
+	public SessionQuery<T, R> skip(int skip){
 		this.skip = Math.max(skip, 0) ;
 		return this ;
 	}
 	
-	public SessionQuery<T> offset(int offset){
+	public SessionQuery<T, R> offset(int offset){
 		this.offset = Math.max(offset, 0) ;
 		return this ;
 	}
@@ -142,6 +143,14 @@ public class SessionQuery<T extends NeoNode> {
 
 	public T findOne() {
 		return (T) find().first();
+	}
+
+	public NeoSession<T, R> getSession() {
+		return session;
+	}
+
+	public NeoTraversalDescription<T, R> traversal() {
+		return NeoTraversalDescription.create(this);
 	}
 
 }

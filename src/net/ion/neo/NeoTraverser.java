@@ -12,11 +12,11 @@ public class NeoTraverser<T extends NeoPath> implements Iterable<T>{
 		this.iterator = iterator ;
 	}
 
-	static NeoTraverser<NeoPath<ReadNode, ReadRelationship>> create(ReadSession session, Traverser traverser){
+	static NeoTraverser create(ReadSession session, Traverser traverser){
 		return new NeoTraverser(new IteratorReadNeoPath(session, traverser)) ;
 	}
 	
-	static NeoTraverser<NeoPath<WriteNode, WriteRelationship>> create(WriteSession wsession, Traverser traverser) {
+	static NeoTraverser create(WriteSession wsession, Traverser traverser) {
 		return new NeoTraverser(new IteratorWriteNeoPath(wsession, traverser)) ;
 	}
 	

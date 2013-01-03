@@ -7,6 +7,7 @@ import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.RandomUtil;
 import net.ion.neo.NodeCursor;
 import net.ion.neo.ReadNode;
+import net.ion.neo.ReadRelationship;
 import net.ion.neo.TestNeoNodeBase;
 import net.ion.neo.TransactionJob;
 import net.ion.neo.WriteNode;
@@ -36,20 +37,20 @@ public class TestFirstQuery extends TestNeoNodeBase {
 	}
 	
 	public void testParseQuery() throws Exception {
-		NodeCursor<ReadNode> nc = session.createQuery().parseQuery("age:[20 TO 30]").find();
+		NodeCursor<ReadNode, ReadRelationship> nc = session.createQuery().parseQuery("age:[20 TO 30]").find();
 		assertEquals(2, nc.count()) ;
 		nc.debugPrint() ;
 	}
 
 	
 	public void testTextTermQuery() throws Exception {
-		NodeCursor<ReadNode> nc = session.createQuery().parseQuery("text:ÅÂ±Ø±â").find() ;
+		NodeCursor<ReadNode, ReadRelationship> nc = session.createQuery().parseQuery("text:ÅÂ±Ø±â").find();
 		assertEquals(1, nc.count()) ;
 	}
 	
 	public void testPropertyWithoutIndex() throws Exception {
 		long start = System.nanoTime() ;
-		NodeCursor<ReadNode> nc = session.createQuery().parseQuery("noindex:3").find() ;
+		NodeCursor<ReadNode, ReadRelationship> nc = session.createQuery().parseQuery("noindex:3").find();
 		assertEquals(0, nc.count()) ;
 		Debug.line(System.nanoTime() - start) ;
 	}
@@ -67,7 +68,7 @@ public class TestFirstQuery extends TestNeoNodeBase {
 			}
 		}).get() ;
 		
-		NodeCursor<ReadNode> nc = session.createQuery().parseQuery("name:all").ascending("index").topDoc(10).find() ;
+		NodeCursor<ReadNode, ReadRelationship> nc = session.createQuery().parseQuery("name:all").ascending("index").topDoc(10).find();
 		final List<ReadNode> list = nc.toList();
 		assertEquals(10, list.size()) ;
 		
