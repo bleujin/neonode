@@ -1,15 +1,10 @@
 package net.ion.neo;
 
-import java.util.ArrayList;
-import java.util.concurrent.Future;
+import junit.framework.TestCase;
+import net.ion.framework.db.Page;
+import net.ion.neo.NeoWorkspace.RelType;
 
 import org.neo4j.graphdb.Direction;
-
-import net.ion.framework.db.Page;
-import net.ion.framework.util.Debug;
-import net.ion.neo.NeoWorkspace.RelType;
-import net.ion.neo.util.ListIterable;
-import junit.framework.TestCase;
 
 public class TestFirst extends TestCase {
 

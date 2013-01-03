@@ -21,7 +21,6 @@ package org.apache.lucene.index;
 
 import java.io.File;
 
-import org.apache.lucene.index.CompoundFileWriter;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 

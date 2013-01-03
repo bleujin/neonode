@@ -1,24 +1,14 @@
 package net.ion.neo.bleujin;
 
-import java.io.File;
-import java.io.IOException;
-
 import net.ion.framework.util.Debug;
 
 import org.neo4j.graphdb.Direction;
-import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
-import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.Transaction;
-import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.index.Index;
 import org.neo4j.graphdb.index.IndexHits;
-import org.neo4j.kernel.impl.util.FileUtils;
 import org.neo4j.tooling.GlobalGraphOperations;
-import org.omg.CORBA.TRANSIENT;
-
-import junit.framework.TestCase;
 
 public class HelloWorld extends TestBase {
 

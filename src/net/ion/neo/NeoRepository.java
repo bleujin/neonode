@@ -1,14 +1,9 @@
 package net.ion.neo;
 
-import java.util.List;
 import java.util.Map;
 
 import net.ion.framework.schedule.IExecutor;
-import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.MapUtil;
-
-import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 
 public class NeoRepository {
 

@@ -1,12 +1,9 @@
 package net.ion.neo;
 
-import java.util.Iterator;
-
 import net.ion.neo.util.ListIterable;
 
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.traversal.TraversalDescription;
 
@@ -33,18 +30,10 @@ public class ReadNode extends NeoNode{
 	
 	
 	public ReadRelationship firstRelationShip(Direction direction, RelationshipType... rtypes){
-		Iterator<Relationship> rels = null ;
-		if (rtypes.length == 0){
-			rels = inner().getRelationships(direction).iterator() ;
-		} else {
-			rels = inner().getRelationships(direction, rtypes).iterator();
-		}
-		if (rels.hasNext()) {
-			return new ReadRelationship(session, rels.next()) ;
-		} else return null ;
+		return relationShips(direction, rtypes).first() ;
 	}
 	
-	public NeoTraverser traverse(TraversalDescription td) {
+	public NeoTraverser<NeoPath<ReadNode, ReadRelationship>> traverse(TraversalDescription td) {
 		return NeoTraverser.create(session, td.traverse(inner())) ;
 	}
 

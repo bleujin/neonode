@@ -3,19 +3,16 @@ package net.ion.neo.cypher;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.neo4j.cypher.javacompat.ExecutionEngine;
-import org.neo4j.cypher.javacompat.ExecutionResult;
-import org.neo4j.graphdb.GraphDatabaseService;
-
 import net.ion.framework.util.Debug;
 import net.ion.framework.util.MapUtil;
-import net.ion.neo.NeoWorkspace;
 import net.ion.neo.TestNeoNodeBase;
 import net.ion.neo.TransactionJob;
 import net.ion.neo.WriteNode;
 import net.ion.neo.WriteSession;
 import net.ion.neo.NeoWorkspace.RelType;
-import net.ion.neo.bleujin.TestBase;
+
+import org.neo4j.cypher.javacompat.ExecutionEngine;
+import org.neo4j.cypher.javacompat.ExecutionResult;
 
 public class TestFirstCypher extends TestNeoNodeBase{
 

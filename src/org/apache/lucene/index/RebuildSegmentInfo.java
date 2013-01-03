@@ -21,9 +21,6 @@ package org.apache.lucene.index;
 
 import java.io.File;
 
-import org.apache.lucene.index.CompoundFileReader;
-import org.apache.lucene.index.SegmentInfo;
-import org.apache.lucene.index.SegmentInfos;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.IndexInput;

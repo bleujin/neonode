@@ -6,9 +6,7 @@ import java.util.List;
 import net.ion.framework.db.Page;
 import net.ion.framework.util.Closure;
 import net.ion.framework.util.CollectionUtil;
-import net.ion.framework.util.Debug;
 import net.ion.framework.util.ListUtil;
-import net.ion.neo.ReadNode;
 
 public abstract class ListIterable<T> implements Iterable<T> {
 
@@ -25,7 +23,7 @@ public abstract class ListIterable<T> implements Iterable<T> {
 		each(page, new DebugPrinter<T>());
 	}
 	
-	public void each(Page page, Closure closure) {
+	public void each(Page page, Closure<T> closure) {
 		CollectionUtil.each(toList(page), closure);
 	}
 

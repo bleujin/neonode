@@ -2,7 +2,6 @@ package net.ion.neo.nf;
 
 import java.net.URL;
 
-import net.ion.framework.db.Page;
 import net.ion.framework.util.Closure;
 import net.ion.framework.util.Debug;
 import net.ion.framework.util.RandomUtil;

@@ -2,13 +2,9 @@ package net.ion.neo.query;
 
 import java.util.List;
 
-import org.apache.lucene.search.SortField;
-
-import net.ion.framework.db.Page;
 import net.ion.framework.util.Debug;
 import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.RandomUtil;
-import net.ion.neo.NeoWorkspace;
 import net.ion.neo.NodeCursor;
 import net.ion.neo.ReadNode;
 import net.ion.neo.TestNeoNodeBase;
@@ -16,7 +12,6 @@ import net.ion.neo.TransactionJob;
 import net.ion.neo.WriteNode;
 import net.ion.neo.WriteSession;
 import net.ion.neo.NeoWorkspace.RelType;
-import junit.framework.TestCase;
 
 public class TestFirstQuery extends TestNeoNodeBase {
 

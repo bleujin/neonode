@@ -1,11 +1,6 @@
 package net.ion.neo;
 
-import java.util.Map;
-
-import net.ion.framework.parse.gson.JsonObject;
-
 import org.neo4j.graphdb.Relationship;
-import org.neo4j.graphdb.RelationshipType;
 
 public class ReadRelationship extends NeoRelationship {
 

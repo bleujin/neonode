@@ -1,9 +1,5 @@
 package net.ion.neo.node;
 
-import org.neo4j.graphdb.event.TransactionData;
-import org.neo4j.graphdb.event.TransactionEventHandler;
-
-import net.ion.framework.db.Page;
 import net.ion.framework.util.Debug;
 import net.ion.neo.ReadNode;
 import net.ion.neo.TestNeoNodeBase;
@@ -11,6 +7,9 @@ import net.ion.neo.TransactionJob;
 import net.ion.neo.WriteNode;
 import net.ion.neo.WriteSession;
 import net.ion.neo.NeoWorkspace.RelType;
+
+import org.neo4j.graphdb.event.TransactionData;
+import org.neo4j.graphdb.event.TransactionEventHandler;
 
 public class TestFirstCUD extends TestNeoNodeBase {
 	

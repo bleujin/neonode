@@ -2,7 +2,6 @@ package net.ion.neo;
 
 import java.util.List;
 
-import net.ion.framework.util.IOUtil;
 import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.StringUtil;
 import net.ion.isearcher.common.IKeywordField;

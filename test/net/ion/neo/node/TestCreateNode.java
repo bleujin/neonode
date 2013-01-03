@@ -1,7 +1,5 @@
 package net.ion.neo.node;
 
-import org.neo4j.graphdb.Direction;
-
 import net.ion.neo.NeoConstant;
 import net.ion.neo.ReadNode;
 import net.ion.neo.ReadRelationship;
@@ -10,6 +8,8 @@ import net.ion.neo.TransactionJob;
 import net.ion.neo.WriteNode;
 import net.ion.neo.WriteSession;
 import net.ion.neo.NeoWorkspace.RelType;
+
+import org.neo4j.graphdb.Direction;
 
 public class TestCreateNode extends TestNeoNodeBase {
 	

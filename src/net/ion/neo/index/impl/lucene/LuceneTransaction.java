@@ -11,7 +11,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import net.ion.framework.util.Debug;
 import net.ion.isearcher.common.IKeywordField;
 import net.ion.neo.index.impl.lucene.CommitContext.DocumentContext;
 import net.ion.neo.index.impl.lucene.LuceneCommand.CreateIndexCommand;

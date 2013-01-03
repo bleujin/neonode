@@ -2,18 +2,11 @@ package net.ion.neo;
 
 import java.util.Iterator;
 
-import net.ion.framework.util.Debug;
-import net.ion.neo.NeoWorkspace.RelType;
-
 import org.neo4j.cypher.javacompat.ExecutionEngine;
 import org.neo4j.graphdb.Direction;
-import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
-import org.neo4j.graphdb.Transaction;
-import org.neo4j.graphdb.index.Index;
-import org.neo4j.graphdb.index.IndexManager;
 
 public class WriteSession extends NeoSession<WriteNode, WriteRelationship> {
 

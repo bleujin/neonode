@@ -1,18 +1,14 @@
 package net.ion.neo;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import net.ion.framework.db.Page;
 import net.ion.framework.util.Closure;
 import net.ion.framework.util.CollectionUtil;
-import net.ion.framework.util.Debug;
 import net.ion.framework.util.ListUtil;
 import net.ion.neo.util.DebugPrinter;
 
 import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.index.IndexHits;
 
 public class NodeCursor<T extends NeoNode> implements Iterator<T>, Iterable<T> {
 

@@ -3,7 +3,6 @@ package net.ion.neo.index.impl.lucene;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.ion.isearcher.common.MyDocument;
 import net.ion.neo.index.impl.lucene.LuceneTransaction.CommandList;
 
 import org.apache.lucene.document.Document;

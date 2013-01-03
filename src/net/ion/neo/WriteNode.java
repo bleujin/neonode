@@ -8,6 +8,7 @@ import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
+import org.neo4j.graphdb.traversal.TraversalDescription;
 
 public class WriteNode extends NeoNode {
 
@@ -40,23 +41,13 @@ public class WriteNode extends NeoNode {
 	
 	public ListIterable<WriteRelationship> relationShips(Direction direction, RelationshipType... rtypes){
 		if (rtypes.length == 0){
-			return new IterableWriteRealtion(wsession, inner().getRelationships(direction)) ;
+			return new IterableWriteRelation(wsession, inner().getRelationships(direction)) ;
 		}
-		return new IterableWriteRealtion(wsession, inner().getRelationships(direction, rtypes)) ;
+		return new IterableWriteRelation(wsession, inner().getRelationships(direction, rtypes)) ;
 	}
 
 	public WriteRelationship firstRelationShip(Direction direction, RelationshipType... rtypes){
-		Iterator<WriteRelationship> iterator = null;
-		if (rtypes.length == 0){
-			iterator = new IterableWriteRealtion(wsession, inner().getRelationships(direction)).iterator() ;
-		} else {
-			iterator = relationShips(direction, rtypes).iterator();
-		}
-		
-		if (iterator.hasNext()){
-			return iterator.next() ; 
-		}
-		return null ; 
+		return relationShips(direction, rtypes).first() ;
 	}
 
 	public WriteRelationship createRelationshipTo(WriteNode node, RelationshipType rel) {
@@ -85,6 +76,10 @@ public class WriteNode extends NeoNode {
 			rel.delete() ;
 		} 
 		node.delete() ;
+	}
+
+	public NeoTraverser<NeoPath<WriteNode, WriteRelationship>> traverse(TraversalDescription td) {
+		return NeoTraverser.create(wsession, td.traverse(inner())) ;
 	}
 
 

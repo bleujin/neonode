@@ -4,13 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.ion.framework.util.Debug;
-import net.ion.framework.util.ListUtil;
 
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Transaction;
-
-import junit.framework.TestCase;
 
 public class TestThreadSafe extends TestBase {
 

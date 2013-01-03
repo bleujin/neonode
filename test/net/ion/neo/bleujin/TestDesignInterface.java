@@ -1,10 +1,5 @@
 package net.ion.neo.bleujin;
 
-import java.util.Iterator;
-
-import org.neo4j.graphdb.Direction;
-import org.neo4j.graphdb.Relationship;
-
 import junit.framework.TestCase;
 import net.ion.framework.util.Debug;
 import net.ion.neo.NeoConstant;
@@ -17,6 +12,8 @@ import net.ion.neo.WriteNode;
 import net.ion.neo.WriteRelationship;
 import net.ion.neo.WriteSession;
 import net.ion.neo.NeoWorkspace.RelType;
+
+import org.neo4j.graphdb.Direction;
 
 public class TestDesignInterface extends TestCase {
 

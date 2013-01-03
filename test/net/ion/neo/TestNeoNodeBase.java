@@ -1,8 +1,8 @@
 package net.ion.neo;
 
-import org.neo4j.graphdb.GraphDatabaseService;
-
 import junit.framework.TestCase;
+
+import org.neo4j.graphdb.GraphDatabaseService;
 
 public class TestNeoNodeBase extends TestCase{
 
