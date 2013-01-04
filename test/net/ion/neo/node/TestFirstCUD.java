@@ -1,5 +1,6 @@
 package net.ion.neo.node;
 
+import net.ion.framework.db.Page;
 import net.ion.framework.util.Debug;
 import net.ion.neo.ReadNode;
 import net.ion.neo.TestNeoNodeBase;
@@ -48,7 +49,7 @@ public class TestFirstCUD extends TestNeoNodeBase {
 			}
 		}).get() ;
 		
-		session.createQuery().find().debugPrint() ;
+		session.createQuery().find().debugPrint(Page.ALL) ;
 	}
 
 	public void testDelete() throws Exception {
@@ -73,7 +74,7 @@ public class TestFirstCUD extends TestNeoNodeBase {
 			}
 		}).get() ;
 		
-		session.createQuery().find().debugPrint() ;
+		session.createQuery().find().debugPrint(Page.ALL) ;
 	}
 	
 	

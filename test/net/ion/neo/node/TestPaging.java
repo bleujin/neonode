@@ -3,6 +3,7 @@ package net.ion.neo.node;
 import java.util.Collections;
 import java.util.List;
 
+import net.ion.framework.db.Page;
 import net.ion.framework.util.ListUtil;
 import net.ion.neo.NodeCursor;
 import net.ion.neo.ReadNode;
@@ -47,7 +48,7 @@ public class TestPaging extends TestNeoNodeBase{
 				assertEquals(9, wnc.toList().get(0).property("idx")) ;
 				assertEquals(18, wnc.toList().get(9).property("idx")) ;
 				
-				wnc.debugPrint() ;
+				wnc.debugPrint(Page.ALL) ;
 				return null;
 			}
 		}).get() ;

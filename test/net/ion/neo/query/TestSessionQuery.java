@@ -1,5 +1,6 @@
 package net.ion.neo.query;
 
+import net.ion.framework.db.Page;
 import net.ion.framework.util.Debug;
 import net.ion.framework.util.RandomUtil;
 import net.ion.neo.NodeCursor;
@@ -41,7 +42,7 @@ public class TestSessionQuery extends TestNeoNodeBase {
 	public void testSkip() throws Exception {
 		long start = System.currentTimeMillis() ;
 		NodeCursor<ReadNode, ReadRelationship> nc = session.createQuery().ascending("idx").skip(2).offset(5).topDoc(5).tradeForSpeed(true).find();
-		nc.debugPrint() ;
+		nc.debugPrint(Page.ALL) ;
 		
 		assertEquals(3, nc.count()) ;
 		assertEquals(2, nc.first().property("idx")) ;

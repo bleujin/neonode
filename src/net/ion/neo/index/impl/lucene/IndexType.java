@@ -4,6 +4,7 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static net.ion.neo.index.impl.lucene.LuceneIndexImplementation.KEY_TO_LOWER_CASE;
 
+import java.lang.reflect.Constructor;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
@@ -205,7 +206,10 @@ abstract class IndexType {
 		String className = config.get(configKey);
 		if (className != null) {
 			try {
-				return Class.forName(className).asSubclass(cls).newInstance();
+				final Class<? extends T> clz = Class.forName(className).asSubclass(cls);
+				final Constructor<? extends T> cons = clz.getDeclaredConstructor(Version.class);
+				return cons.newInstance(Version.LUCENE_36) ;
+//				return clz.newInstance();
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}

@@ -23,6 +23,9 @@ public abstract class ListIterable<T> implements Iterable<T> {
 		each(page, new DebugPrinter<T>());
 	}
 	
+	public void each(Closure<T> closure) {
+		each(Page.ALL, closure) ;
+	}
 	public void each(Page page, Closure<T> closure) {
 		CollectionUtil.each(toList(page), closure);
 	}
@@ -38,7 +41,7 @@ public abstract class ListIterable<T> implements Iterable<T> {
 		return toList(pageIndexOnScreen * page.getListNum(), page.getListNum());
 	}
 
-	public List<T> toList(int skip, int limit) {
+	public List<T> toList(int skip, int offset) {
 		Iterator<T> iter = this.iterator();
 		while (skip-- > 0) {
 			if (iter.hasNext()) {
@@ -48,7 +51,7 @@ public abstract class ListIterable<T> implements Iterable<T> {
 			}
 		}
 		List<T> result = ListUtil.newList();
-		while (limit-- > 0 && iter.hasNext()) {
+		while (offset-- > 0 && iter.hasNext()) {
 			result.add(iter.next());
 		}
 		return result;

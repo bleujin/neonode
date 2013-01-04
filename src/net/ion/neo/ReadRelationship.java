@@ -1,14 +1,15 @@
 package net.ion.neo;
 
+
 import org.neo4j.graphdb.Relationship;
 
-public class ReadRelationship extends NeoRelationship {
+public class ReadRelationship extends NeoRelationship<ReadNode> {
 
+	private ReadSession rsession;
 
-	private ReadSession rsession ;
 	ReadRelationship(ReadSession wsession, Relationship relationShip) {
-		super(relationShip) ;
-		this.rsession = wsession ;
+		super(relationShip);
+		this.rsession = wsession;
 	}
 
 	public static ReadRelationship load(ReadSession rsession, Relationship relationShip) {
@@ -23,8 +24,8 @@ public class ReadRelationship extends NeoRelationship {
 		return rsession.node(relationShip().getStartNode());
 	}
 
-	public ReadRelationship property(String pkey, Object value){
-		relationShip().setProperty(pkey, value) ;
-		return this ;
+	public ReadRelationship property(String pkey, Object value) {
+		relationShip().setProperty(pkey, value);
+		return this;
 	}
 }

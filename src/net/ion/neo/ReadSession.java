@@ -53,8 +53,8 @@ public class ReadSession extends NeoSession<ReadNode, ReadRelationship>{
 		return wspace.executionEngine() ;
 	}
 
-	public RelationQuery<ReadRelationship> relationshipQuery() {
-		return RelationQuery.create(this) ;
+	public SessionRelationshipQuery<ReadRelationship> relationshipQuery() {
+		return SessionRelationshipQuery.create(this) ;
 	}
 
 	public ReadNode findById(long id) {

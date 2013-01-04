@@ -10,11 +10,9 @@ import org.neo4j.graphdb.RelationshipType;
 
 public class WriteSession extends NeoSession<WriteNode, WriteRelationship> {
 
-	private ReadSession session ;
 	private NeoWorkspace wspace ;
 	
 	WriteSession(ReadSession session, NeoWorkspace workspace) {
-		this.session = session ;
 		this.wspace = workspace ; 
 	}
 	
@@ -70,8 +68,8 @@ public class WriteSession extends NeoSession<WriteNode, WriteRelationship> {
 		return wspace.executionEngine() ;
 	}
 
-	public RelationQuery<WriteRelationship> relationshipQuery() {
-		return RelationQuery.create(this) ;
+	public SessionRelationshipQuery<WriteRelationship> relationshipQuery() {
+		return SessionRelationshipQuery.create(this) ;
 	}
 
 }

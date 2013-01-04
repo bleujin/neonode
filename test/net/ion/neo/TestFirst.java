@@ -44,7 +44,7 @@ public class TestFirst extends TestCase {
 			}
 		}).get() ;
 		
-		session.createQuery().find().debugPrint() ;
+		session.createQuery().find().debugPrint(Page.ALL) ;
 		session.rootNode().relationShips(Direction.OUTGOING, RelType.CHILD).debugPrint(Page.ALL) ;
 	}
 	

@@ -2,7 +2,7 @@ package net.ion.neo;
 
 import org.neo4j.graphdb.Relationship;
 
-public class WriteRelationship extends NeoRelationship {
+public class WriteRelationship extends NeoRelationship<WriteNode> {
 
 	private WriteSession wsession ;
 	WriteRelationship(WriteSession wsession, Relationship relationShip) {

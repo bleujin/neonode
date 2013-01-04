@@ -2,6 +2,7 @@ package net.ion.neo.query;
 
 import java.util.List;
 
+import net.ion.framework.db.Page;
 import net.ion.framework.util.Debug;
 import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.RandomUtil;
@@ -39,7 +40,7 @@ public class TestFirstQuery extends TestNeoNodeBase {
 	public void testParseQuery() throws Exception {
 		NodeCursor<ReadNode, ReadRelationship> nc = session.createQuery().parseQuery("age:[20 TO 30]").find();
 		assertEquals(2, nc.count()) ;
-		nc.debugPrint() ;
+		nc.debugPrint(Page.ALL) ;
 	}
 
 	

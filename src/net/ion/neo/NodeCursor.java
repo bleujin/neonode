@@ -7,58 +7,31 @@ import net.ion.framework.util.Closure;
 import net.ion.framework.util.CollectionUtil;
 import net.ion.framework.util.ListUtil;
 import net.ion.neo.util.DebugPrinter;
+import net.ion.neo.util.ListIterable;
 
-import org.apache.ecs.xhtml.s;
 import org.neo4j.graphdb.Node;
 
-public class NodeCursor<T extends NeoNode, R extends NeoRelationship> implements Iterator<T>, Iterable<T> {
+public class NodeCursor<T extends NeoNode, R extends NeoRelationship> extends ListIterable<T> implements Iterator<T> {
 
 	private NeoSession<T, R> session ;
 	private Iterator<Node> iter ;
 	private List<Node> hits ;
-	private NodeCursor(NeoSession session, List<Node> hits) {
+	private NodeCursor(NeoSession<T, R> session, List<Node> hits) {
 		this.session = session ;
 		this.hits = hits ;
 		this.iter = hits.iterator() ;
 	}
 
-	static NodeCursor create(NeoSession session, List<Node> hits) {
-		return new NodeCursor(session, hits);
-	}
-
-	public void debugPrint() {
-		each(new DebugPrinter<T>());
-	}
-	
-	public void each(Closure<T> closure) {
-		CollectionUtil.each(toList(), closure);
+	static <T extends NeoNode, R extends NeoRelationship> NodeCursor<T, R> create(NeoSession<T, R> session, List<Node> hits) {
+		return new NodeCursor<T, R>(session, hits);
 	}
 
 	public T next(){
 		return session.node(iter.next());
 	}
-	public void close(){
-		//
-	}
 	
-	public List<T> toList() {
-		List<T> result = ListUtil.newList() ;
-		for (Node node : hits) {
-			result.add(session.node(node)) ;
-		}
-		return result ;
-	}
-
 	public int count() {
 		return hits.size();
-	}
-
-	public T first() {
-		if (count() > 0){
-			return (T) session.node(hits.get(0)) ;
-		} else {
-			return null ;
-		}
 	}
 
 	@Override

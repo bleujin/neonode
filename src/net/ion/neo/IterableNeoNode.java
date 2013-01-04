@@ -26,6 +26,21 @@ class IterableReadNode extends ListIterable<ReadNode> {
 
 }
 
+class IterableWriteNode extends ListIterable<WriteNode> {
+
+	private IteratorWriteNode iterator ;
+	IterableWriteNode(WriteSession rsession, Iterable<Node> iterable) {
+		this.iterator = new IteratorWriteNode(rsession, iterable.iterator()) ;
+	}
+
+	@Override
+	public Iterator<WriteNode> iterator() {
+		return iterator;
+	}
+
+
+}
+
 class IteratorReadNode implements Iterator<ReadNode> {
 
 	private ReadSession rsession ;
@@ -51,21 +66,6 @@ class IteratorReadNode implements Iterator<ReadNode> {
 	}
 }
 
-
-class IterableWriteNode extends ListIterable<WriteNode> {
-
-	private IteratorWriteNode iterator ;
-	IterableWriteNode(WriteSession rsession, Iterable<Node> iterable) {
-		this.iterator = new IteratorWriteNode(rsession, iterable.iterator()) ;
-	}
-
-	@Override
-	public Iterator<WriteNode> iterator() {
-		return iterator;
-	}
-
-
-}
 
 class IteratorWriteNode implements Iterator<WriteNode> {
 

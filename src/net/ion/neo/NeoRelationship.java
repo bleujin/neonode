@@ -7,7 +7,7 @@ import net.ion.framework.parse.gson.JsonObject;
 import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.RelationshipType;
 
-public class NeoRelationship {
+public abstract class NeoRelationship<T extends NeoNode> {
 
 	private Relationship relationShip ;
 	protected NeoRelationship(Relationship relationship){
@@ -26,6 +26,11 @@ public class NeoRelationship {
 		return relationShip().getProperty(pkey);
 	}
 
+	public abstract T endNode() ; 
+
+	public abstract T startNode() ;
+	
+	
 	public Iterable<String> keys(){
 		return relationShip().getPropertyKeys() ;
 	}

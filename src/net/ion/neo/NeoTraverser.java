@@ -2,26 +2,28 @@ package net.ion.neo;
 
 import java.util.Iterator;
 
+import net.ion.neo.util.ListIterable;
+
 import org.neo4j.graphdb.Path;
 import org.neo4j.graphdb.traversal.Traverser;
 
-public class NeoTraverser<T extends NeoPath> implements Iterable<T>{
+public class NeoTraverser<T extends NeoNode, R extends NeoRelationship> extends ListIterable<NeoPath<T,R>>{
 
-	private Iterator<T> iterator ;
-	private NeoTraverser(Iterator<T> iterator) {
+	private Iterator<NeoPath<T, R>> iterator ;
+	private NeoTraverser(Iterator<NeoPath<T, R>> iterator) {
 		this.iterator = iterator ;
 	}
 
-	static NeoTraverser create(ReadSession session, Traverser traverser){
+	static <T extends NeoNode, R extends NeoRelationship> NeoTraverser<T, R> create(ReadSession session, Traverser traverser){
 		return new NeoTraverser(new IteratorReadNeoPath(session, traverser)) ;
 	}
 	
-	static NeoTraverser create(WriteSession wsession, Traverser traverser) {
+	static <T extends NeoNode, R extends NeoRelationship> NeoTraverser<T, R> create(WriteSession wsession, Traverser traverser) {
 		return new NeoTraverser(new IteratorWriteNeoPath(wsession, traverser)) ;
 	}
 	
 	@Override
-	public Iterator<T> iterator() {
+	public Iterator<NeoPath<T, R>> iterator() {
 		return iterator;
 	}
 

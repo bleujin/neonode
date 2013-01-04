@@ -2,6 +2,7 @@ package net.ion.neo;
 
 import java.util.List;
 
+import net.ion.framework.util.Debug;
 import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.StringUtil;
 import net.ion.isearcher.common.IKeywordField;
@@ -21,72 +22,75 @@ import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
 import org.apache.lucene.util.Version;
 import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.index.Index;
 import org.neo4j.graphdb.index.IndexHits;
+import org.neo4j.graphdb.index.RelationshipIndex;
 
-public class SessionQuery<T extends NeoNode, R extends NeoRelationship> {
+public class SessionRelationshipQuery<R extends NeoRelationship> {
 
-	private NeoSession<T, R> session;
+	private NeoSession<?, R> session ;
 	private String queryString;
 	private List<SortField> sorts = ListUtil.newList();
-
+	
 	private int topDoc = 100 ; // default limit
 	private int skip = 0 ;
 	private int offset = 100 ;
 	private boolean tradeForSpeed = false ;
-	private Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
-	
-	SessionQuery(NeoSession<T, R> session) {
-		this.session = session;
+	private Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36) ;
+
+	public SessionRelationshipQuery(NeoSession<?, R> session) {
+		this.session = session ;
 	}
 
-	static <T extends NeoNode, R extends NeoRelationship> SessionQuery<T, R> create(NeoSession<T, R> session) {
-		return new SessionQuery<T, R>(session);
+	public static <T extends NeoNode, R extends NeoRelationship>  SessionRelationshipQuery<R> create(NeoSession<T, R> session) {
+		return new SessionRelationshipQuery<R>(session);
 	}
 
-	public SessionQuery<T, R> parseQuery(String queryString) {
+
+	public SessionRelationshipQuery<R> parseQuery(String queryString) {
 		this.queryString = queryString;
 		return this;
 	}
-	
-	public SessionQuery<T, R> analyzer(Analyzer analyzer) {
+
+	public SessionRelationshipQuery<R> analyzer(Analyzer analyzer) {
 		this.analyzer = analyzer ;
 		return this;
 	}
 
-
-
-	public SessionQuery<T, R> ascending(String propId) {
+	
+	public SessionRelationshipQuery<R> ascending(String propId) {
 		sorts.add(new SortField(propId + MyField.SORT_POSTFIX, SortField.STRING));
 		return this;
 	}
 
-	public SessionQuery<T, R> ascending(String propId, int sortType) {
+	public SessionRelationshipQuery<R> ascending(String propId, int sortType) {
 		sorts.add(new SortField(propId + MyField.SORT_POSTFIX, sortType));
 		return this;
 	}
 
-	public SessionQuery<T, R> descending(String propId) {
+	public SessionRelationshipQuery<R> descending(String propId) {
 		sorts.add(new SortField(propId + MyField.SORT_POSTFIX, SortField.STRING, true));
 		return this;
 	}
 
-	public SessionQuery<T, R> descending(String propId, int sortType) {
+	public SessionRelationshipQuery<R> descending(String propId, int sortType) {
 		sorts.add(new SortField(propId + MyField.SORT_POSTFIX, sortType, true));
 		return this;
 	}
-
-	public NodeCursor<T, R> find(){
+	
+	public RelationshipCursor<R> find(){
 		try {
-			Index<Node> indexer = session.workspace().indexTextNode();
+			RelationshipIndex indexer = session.workspace().indexTextRelation();
 			QueryContext query = createQuery(queryString);
 
-			final IndexHits<Node> hits = indexer.query(query);
+			final IndexHits<Relationship> hits = indexer.query(query);
+			
 			try {
 				int _skip = this.skip ;
-				int _offset = this.offset ;
+				int _offset = this.topDoc ;
 				
-				List<Node> hitNodes = ListUtil.newList() ;
+				List<Relationship> hitNodes = ListUtil.newList() ;
 				while(_skip-- > 0){
 					if (hits.hasNext()) {
 						hits.next();
@@ -99,33 +103,31 @@ public class SessionQuery<T extends NeoNode, R extends NeoRelationship> {
 					hitNodes.add(hits.next());
 				}
 				
-				return NodeCursor.create(session, hitNodes);
+				return RelationshipCursor.create(session, hitNodes);
 			} finally {
 				if (hits != null) hits.close() ;
-			} 
+			}
 		} catch (ParseException ex) {
 			throw new IllegalArgumentException(ex);
 		}
 	}
 	
-	public SessionQuery<T, R> tradeForSpeed(boolean tradeForSpeed){
+	public SessionRelationshipQuery<R> tradeForSpeed(boolean tradeForSpeed){
 		this.tradeForSpeed = tradeForSpeed ;
 		return this ;
 	}
-	
-
-	public SessionQuery<T, R> topDoc(int topDoc){
+	public SessionRelationshipQuery<R> topDoc(int topDoc){
 		this.topDoc = Math.max(topDoc, 0) ;
 		return this ;
 	}
 	
-	public SessionQuery<T, R> skip(int skip){
+	public SessionRelationshipQuery<R> skip(int skip){
 		this.skip = Math.max(skip, 0) ;
 		return this ;
 	}
 	
-	public SessionQuery<T, R> offset(int offset){
-		this.offset = Math.max(offset, 0) ;
+	public SessionRelationshipQuery<R> offset(int offset){
+		this.topDoc = Math.max(offset, 0) ;
 		return this ;
 	}
 	
@@ -134,8 +136,9 @@ public class SessionQuery<T extends NeoNode, R extends NeoRelationship> {
 		if (StringUtil.isBlank(queryString)) {
 			query = new MatchAllDocsQuery() ;
 		} else {
-			QueryParser parser = new QueryParser(Version.LUCENE_35, IKeywordField.ISALL_FIELD, analyzer);
+			QueryParser parser = new QueryParser(Version.LUCENE_36, IKeywordField.ISALL_FIELD, analyzer);
 			query = parser.parse(queryString);
+//			Debug.line(queryString, query, analyzer) ; 
 		}
 
 		QueryContext context = new QueryContext(query).defaultOperator(Operator.AND);
@@ -144,22 +147,11 @@ public class SessionQuery<T extends NeoNode, R extends NeoRelationship> {
 		} else {
 			context.sortByScore() ;
 		}
-		if (tradeForSpeed) context.tradeCorrectnessForSpeed() ;
 		context.top(topDoc) ;
 
 		return context;
+	}	
+	public R findOne() {
+		return (R) find().first();
 	}
-
-	public T findOne() {
-		return (T) find().first();
-	}
-
-	public NeoSession<T, R> getSession() {
-		return session;
-	}
-
-	public NeoTraversalDescription<T, R> traversal() {
-		return NeoTraversalDescription.create(this);
-	}
-
 }

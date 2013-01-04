@@ -5,7 +5,7 @@ import net.ion.framework.util.Debug;
 import net.ion.isearcher.common.MyField;
 import net.ion.neo.NeoConstant;
 import net.ion.neo.ReadRelationship;
-import net.ion.neo.RelationCursor;
+import net.ion.neo.RelationshipCursor;
 import net.ion.neo.TestNeoNodeBase;
 import net.ion.neo.TransactionJob;
 import net.ion.neo.WriteNode;
@@ -42,7 +42,7 @@ public class TestRemoveRelation extends TestNeoNodeBase {
 
 			@Override
 			public Void handle(WriteSession tsession) {
-				RelationCursor<WriteRelationship> rc = tsession.relationshipQuery().parseQuery(NeoConstant.RelationName + ":" + NeoConstant.DefaultRelationName).find();
+				RelationshipCursor<WriteRelationship> rc = tsession.relationshipQuery().parseQuery(NeoConstant.RelationName + ":" + NeoConstant.DefaultRelationName).find();
 				for (WriteRelationship r : rc.toList(Page.ALL)) {
 					r.remove() ;
 				}

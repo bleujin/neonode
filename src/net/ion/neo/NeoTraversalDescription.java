@@ -3,9 +3,7 @@ package net.ion.neo;
 import java.util.Comparator;
 import java.util.List;
 
-import net.ion.framework.util.Debug;
 import net.ion.framework.util.ListUtil;
-import net.ion.neo.NeoWorkspace.RelType;
 
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
@@ -14,7 +12,6 @@ import org.neo4j.graphdb.PathExpander;
 import org.neo4j.graphdb.RelationshipType;
 import org.neo4j.graphdb.traversal.BranchOrderingPolicy;
 import org.neo4j.graphdb.traversal.Evaluator;
-import org.neo4j.graphdb.traversal.Evaluators;
 import org.neo4j.graphdb.traversal.InitialBranchState;
 import org.neo4j.graphdb.traversal.PathEvaluator;
 import org.neo4j.graphdb.traversal.TraversalDescription;
@@ -41,7 +38,7 @@ public class NeoTraversalDescription<T extends NeoNode, R extends NeoRelationshi
 	}
 	
 	public final static <T extends NeoNode, R extends NeoRelationship> NeoTraversalDescription<T, R> create(List<T> list, NeoSession<T, R> session){
-		return new NeoTraversalDescription(list, session) ;
+		return new NeoTraversalDescription<T, R>(list, session) ;
 	}
 	
 	
@@ -104,7 +101,7 @@ public class NeoTraversalDescription<T extends NeoNode, R extends NeoRelationshi
     	return this ;
     }
 
-    public NeoTraverser<NeoPath<T, R>> traverse(){
+    public NeoTraverser<T, R> traverse(){
     	List<Node> result = ListUtil.newList() ;
     	for (T t : resultNode) {
 			result.add(t.inner()) ;

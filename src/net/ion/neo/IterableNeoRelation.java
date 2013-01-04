@@ -1,9 +1,7 @@
 package net.ion.neo;
 
 import java.util.Iterator;
-import java.util.List;
 
-import net.ion.framework.util.ListUtil;
 import net.ion.neo.util.ListIterable;
 
 import org.neo4j.graphdb.Relationship;
@@ -27,6 +25,21 @@ class IterableReadRelation extends ListIterable<ReadRelationship> {
 		return iterator;
 	}
 }
+
+
+class IterableWriteRelation extends ListIterable<WriteRelationship> {
+
+	private IteratorWriteRelation iterator ;
+	IterableWriteRelation(WriteSession wsession, Iterable<Relationship> iterable) {
+		this.iterator = new IteratorWriteRelation(wsession, iterable.iterator()) ;
+	}
+	
+	@Override
+	public Iterator<WriteRelationship> iterator() {
+		return iterator;
+	}
+}
+
 
 class IteratorReadRelation implements Iterator<ReadRelationship> {
 
@@ -53,29 +66,6 @@ class IteratorReadRelation implements Iterator<ReadRelationship> {
 	}
 }
 
-class IterableWriteRelation extends ListIterable<WriteRelationship> {
-
-	private IteratorWriteRelation iterator ;
-	IterableWriteRelation(WriteSession wsession, Iterable<Relationship> iterable) {
-		this.iterator = new IteratorWriteRelation(wsession, iterable.iterator()) ;
-	}
-	
-	@Override
-	public Iterator<WriteRelationship> iterator() {
-		return iterator;
-	}
-	
-
-	@Override
-	public List<WriteRelationship> toList() {
-		List<WriteRelationship> result = ListUtil.newList();
-		for (WriteRelationship rs : this) {
-			result.add(rs) ;
-		}
-		return result;
-	}
-
-}
 
 
 class IteratorWriteRelation implements Iterator<WriteRelationship>{

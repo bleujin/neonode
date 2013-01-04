@@ -5,8 +5,8 @@ import java.io.IOException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
-import net.ion.isearcher.searcher.MyKoreanAnalyzer;
-
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.neo4j.cypher.javacompat.ExecutionEngine;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
@@ -40,16 +40,18 @@ public class NeoWorkspace {
 	private final String dbPath ;
 	private GraphDatabaseService graphDB ;
 	private ExecutionEngine engine ;
+	private Class<? extends Analyzer> indexAnal ;
 	
-	private NeoWorkspace(NeoRepository repository, String dbPath) {
+	private NeoWorkspace(NeoRepository repository, String dbPath, Class<? extends Analyzer> indexAnal) {
 		this.repository = repository ;
 		this.dbPath = dbPath ; 
 		this.graphDB = new GraphDatabaseFactory().newEmbeddedDatabase(dbPath) ;
 		this.engine = new ExecutionEngine(graphDB) ;
+		this.indexAnal = indexAnal ;
 	}
 
-	public static NeoWorkspace create(NeoRepository repository, String path) {
-		return new NeoWorkspace(repository, path);
+	public static NeoWorkspace create(NeoRepository repository, String path, Class<? extends Analyzer> indexAnal) {
+		return new NeoWorkspace(repository, path, indexAnal);
 	}
 
 	public void close(){
@@ -94,13 +96,13 @@ public class NeoWorkspace {
 	}
 	
 	public RelationshipIndex indexTextRelation(){
-		return graphDB.index().forRelationships("fulltextrelation", MapUtil.stringMap(IndexManager.PROVIDER, "neolucene", "type", "fulltext", "to_lower_case", "true", "analyzer", MyKoreanAnalyzer.class.getCanonicalName())) ;
+		return graphDB.index().forRelationships("fulltextrelation", MapUtil.stringMap(IndexManager.PROVIDER, "neolucene", "type", "fulltext", "to_lower_case", "true", "analyzer", indexAnal.getCanonicalName())) ; //MyKoreanAnalyzer.class.getCanonicalName()
 	}
 	
 	public Index<Node> indexTextNode(){
 		
 //		return graphDB.index().forNodes("keyproperty", MapUtil.stringMap(IndexManager.PROVIDER, "lucene", "type", "exact", "to_lower_case", "true")) ;
-		return graphDB.index().forNodes("fulltextproperty", MapUtil.stringMap(IndexManager.PROVIDER, "neolucene", "type", "fulltext", "to_lower_case", "true", "analyzer", MyKoreanAnalyzer.class.getCanonicalName())) ;
+		return graphDB.index().forNodes("fulltextproperty", MapUtil.stringMap(IndexManager.PROVIDER, "neolucene", "type", "fulltext", "to_lower_case", "true", "analyzer", indexAnal.getCanonicalName())) ;
 	}
 	
 	
