@@ -66,7 +66,6 @@ public class WriteNode extends NeoNode {
 	}
 
 
-
 	public void remove() {
 		final Node node = inner();
 		wsession.workspace().indexTextNode().remove(node) ;

@@ -1,6 +1,7 @@
 package net.ion.neo.relation;
 
 import net.ion.framework.db.Page;
+import net.ion.neo.ReadRelationship;
 import net.ion.neo.RelationshipCursor;
 import net.ion.neo.TestNeoNodeBase;
 import net.ion.neo.TransactionJob;
@@ -46,16 +47,19 @@ public class TestRelationshipCursor extends TestNeoNodeBase{
 				assertEquals(2, session.rootNode().relationShips(Direction.OUTGOING).toList().size()) ;
 				
 				final RelationshipCursor<WriteRelationship> findrc = tsession.relationshipQuery().parseQuery("rel:val2").find();
-				findrc.debugPrint(Page.ALL) ;
-				// findrc.next().remove() ;
+				findrc.next().remove() ;
 
 				return null;
 			}
 		}).get() ;
 		
-//		final RelationshipCursor<ReadRelationship> rc = session.relationshipQuery().find();
-//		assertEquals(1, rc.count()) ;
-//		assertEquals(1, session.rootNode().relationShips(Direction.OUTGOING).toList().size()) ;
-//		rc.debugPrint(Page.ALL) ;
+		final RelationshipCursor<ReadRelationship> rc = session.relationshipQuery().find();
+		assertEquals(1, rc.count()) ;
+		assertEquals(1, session.rootNode().relationShips(Direction.OUTGOING).toList().size()) ;
+		assertEquals("val1", rc.next().property("rel")) ;
 	}
+	
+	
+	
+	
 }

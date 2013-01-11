@@ -13,10 +13,6 @@ import org.neo4j.graphdb.Direction;
 
 public class TestFirstRelationShip extends TestNeoNodeBase{
 
-	
-	
-	
-	
 	public void testMergeRelation() throws Exception {
 		session.workspace().clear() ;
 		session.tran(new TransactionJob<Void>() {

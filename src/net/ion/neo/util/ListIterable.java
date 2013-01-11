@@ -41,7 +41,7 @@ public abstract class ListIterable<T> implements Iterable<T> {
 		return toList(pageIndexOnScreen * page.getListNum(), page.getListNum());
 	}
 
-	public List<T> toList(int skip, int offset) {
+	public List<T> toList(int skip, int length) {
 		Iterator<T> iter = this.iterator();
 		while (skip-- > 0) {
 			if (iter.hasNext()) {
@@ -51,7 +51,7 @@ public abstract class ListIterable<T> implements Iterable<T> {
 			}
 		}
 		List<T> result = ListUtil.newList();
-		while (offset-- > 0 && iter.hasNext()) {
+		while (length-- > 0 && iter.hasNext()) {
 			result.add(iter.next());
 		}
 		return result;

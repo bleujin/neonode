@@ -1,5 +1,7 @@
 package net.ion.neo.query;
 
+import java.util.List;
+
 import net.ion.framework.db.Page;
 import net.ion.framework.util.Debug;
 import net.ion.framework.util.RandomUtil;
@@ -41,12 +43,15 @@ public class TestSessionQuery extends TestNeoNodeBase {
 	
 	public void testSkip() throws Exception {
 		long start = System.currentTimeMillis() ;
-		NodeCursor<ReadNode, ReadRelationship> nc = session.createQuery().ascending("idx").skip(2).offset(5).topDoc(5).tradeForSpeed(true).find();
-		nc.debugPrint(Page.ALL) ;
+		NodeCursor<ReadNode, ReadRelationship> nc = session.createQuery().ascending("idx").skip(2).atLength(5).topDoc(5).tradeForSpeed(true).find();
+//		nc.debugPrint(Page.ALL) ;
 		
 		assertEquals(3, nc.count()) ;
-		assertEquals(2, nc.first().property("idx")) ;
-		assertEquals(4, nc.toList().get(2).property("idx")) ;
+		
+		List<ReadNode> list = nc.toList();
+		
+		assertEquals(2, list.get(0).property("idx")) ;
+		assertEquals(4, list.get(2).property("idx")) ;
 		Debug.line(System.currentTimeMillis() - start) ;
 	}
 

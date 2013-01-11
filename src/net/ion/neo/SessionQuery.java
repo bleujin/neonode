@@ -32,7 +32,7 @@ public class SessionQuery<T extends NeoNode, R extends NeoRelationship> {
 
 	private int topDoc = 100 ; // default limit
 	private int skip = 0 ;
-	private int offset = 100 ;
+	private int atLength = 100 ;
 	private boolean tradeForSpeed = false ;
 	private Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36);
 	
@@ -84,7 +84,7 @@ public class SessionQuery<T extends NeoNode, R extends NeoRelationship> {
 			final IndexHits<Node> hits = indexer.query(query);
 			try {
 				int _skip = this.skip ;
-				int _offset = this.offset ;
+				int _limit = this.atLength ;
 				
 				List<Node> hitNodes = ListUtil.newList() ;
 				while(_skip-- > 0){
@@ -95,7 +95,7 @@ public class SessionQuery<T extends NeoNode, R extends NeoRelationship> {
 					}
 				}
 				
-				while (_offset-- > 0 && hits.hasNext()) {
+				while (_limit-- > 0 && hits.hasNext()) {
 					hitNodes.add(hits.next());
 				}
 				
@@ -124,8 +124,8 @@ public class SessionQuery<T extends NeoNode, R extends NeoRelationship> {
 		return this ;
 	}
 	
-	public SessionQuery<T, R> offset(int offset){
-		this.offset = Math.max(offset, 0) ;
+	public SessionQuery<T, R> atLength(int limit){
+		this.atLength = Math.max(limit, 0) ;
 		return this ;
 	}
 	

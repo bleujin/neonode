@@ -35,7 +35,7 @@ public class SessionRelationshipQuery<R extends NeoRelationship> {
 	
 	private int topDoc = 100 ; // default limit
 	private int skip = 0 ;
-	private int offset = 100 ;
+	private int atLength = 100 ;
 	private boolean tradeForSpeed = false ;
 	private Analyzer analyzer = new StandardAnalyzer(Version.LUCENE_36) ;
 
@@ -88,7 +88,7 @@ public class SessionRelationshipQuery<R extends NeoRelationship> {
 			
 			try {
 				int _skip = this.skip ;
-				int _offset = this.topDoc ;
+				int _atLength = this.atLength ;
 				
 				List<Relationship> hitNodes = ListUtil.newList() ;
 				while(_skip-- > 0){
@@ -99,7 +99,7 @@ public class SessionRelationshipQuery<R extends NeoRelationship> {
 					}
 				}
 				
-				while (_offset-- > 0 && hits.hasNext()) {
+				while (_atLength-- > 0 && hits.hasNext()) {
 					hitNodes.add(hits.next());
 				}
 				
@@ -126,8 +126,8 @@ public class SessionRelationshipQuery<R extends NeoRelationship> {
 		return this ;
 	}
 	
-	public SessionRelationshipQuery<R> offset(int offset){
-		this.topDoc = Math.max(offset, 0) ;
+	public SessionRelationshipQuery<R> atLength(int atLength){
+		this.topDoc = Math.max(atLength, 0) ;
 		return this ;
 	}
 	

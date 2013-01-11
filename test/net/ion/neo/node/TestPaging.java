@@ -33,7 +33,7 @@ public class TestPaging extends TestNeoNodeBase{
 			}
 		}).get() ;
 		
-		NodeCursor<ReadNode, ReadRelationship> nc = session.createQuery().parseQuery("name:bleujin").ascending("idx").skip(10).offset(10).find();
+		NodeCursor<ReadNode, ReadRelationship> nc = session.createQuery().parseQuery("name:bleujin").ascending("idx").skip(10).atLength(10).find();
 		assertEquals(10, nc.toList().get(0).property("idx")) ;
 		assertEquals(19, nc.toList().get(9).property("idx")) ;
 		
@@ -44,7 +44,7 @@ public class TestPaging extends TestNeoNodeBase{
 				
 				tsession.newNode().property("idx", -1).property("name", "bleujin");
 				
-				NodeCursor<WriteNode, WriteRelationship> wnc = tsession.createQuery().parseQuery("name:bleujin").ascending("idx").skip(10).offset(10).find();
+				NodeCursor<WriteNode, WriteRelationship> wnc = tsession.createQuery().parseQuery("name:bleujin").ascending("idx").skip(10).atLength(10).find();
 				assertEquals(9, wnc.toList().get(0).property("idx")) ;
 				assertEquals(18, wnc.toList().get(9).property("idx")) ;
 				
