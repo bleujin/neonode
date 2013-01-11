@@ -43,7 +43,6 @@ public class TestFirstQuery extends TestNeoNodeBase {
 		nc.debugPrint(Page.ALL) ;
 	}
 
-	
 	public void testTextTermQuery() throws Exception {
 		NodeCursor<ReadNode, ReadRelationship> nc = session.createQuery().parseQuery("text:еб╠ь╠Б").find();
 		assertEquals(1, nc.count()) ;

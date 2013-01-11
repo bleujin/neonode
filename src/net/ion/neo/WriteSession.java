@@ -60,7 +60,7 @@ public class WriteSession extends NeoSession<WriteNode, WriteRelationship> {
 	}
 
 	public SessionQuery<WriteNode, WriteRelationship> createQuery() {
-		return SessionQuery.create(this) ;
+		return SessionQuery.create(this).analyzer(wspace.newAnalyzer()) ;
 	}
 
 

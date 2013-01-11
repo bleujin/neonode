@@ -2,11 +2,15 @@ package net.ion.neo;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
+import net.ion.neo.exception.NeoRuntimeException;
+
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.util.Version;
 import org.neo4j.cypher.javacompat.ExecutionEngine;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
@@ -50,6 +54,24 @@ public class NeoWorkspace {
 		this.indexAnal = indexAnal ;
 	}
 
+	public Analyzer newAnalyzer(){
+		try {
+			return indexAnal.getDeclaredConstructor(Version.class).newInstance(Version.LUCENE_36) ;
+		} catch (IllegalArgumentException e) {
+			throw NeoRuntimeException.from(e) ;
+		} catch (SecurityException e) {
+			throw NeoRuntimeException.from(e) ;
+		} catch (InstantiationException e) {
+			throw NeoRuntimeException.from(e) ;
+		} catch (IllegalAccessException e) {
+			throw NeoRuntimeException.from(e) ;
+		} catch (InvocationTargetException e) {
+			throw NeoRuntimeException.from(e) ;
+		} catch (NoSuchMethodException e) {
+			throw NeoRuntimeException.from(e) ;
+		}
+	}
+	
 	public static NeoWorkspace create(NeoRepository repository, String path, Class<? extends Analyzer> indexAnal) {
 		return new NeoWorkspace(repository, path, indexAnal);
 	}

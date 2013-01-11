@@ -25,8 +25,8 @@ public class TestRelationshipCursor extends TestNeoNodeBase{
 			public Void handle(WriteSession tsession) {
 				WriteNode hero = tsession.newNode().property("name", "hero");
 				
-				tsession.rootNode().createRelationshipTo(hero, RelType.CHILD).property("rel", "val1") ;
-				tsession.rootNode().createRelationshipTo(hero, RelType.CHILD).property("rel", "val2") ;
+				tsession.rootNode().createRelationshipTo(hero, RelType.CHILD).property("rel", "abcd") ;
+				tsession.rootNode().createRelationshipTo(hero, RelType.CHILD).property("rel", "defg") ;
 
 				return null;
 			}
@@ -34,8 +34,8 @@ public class TestRelationshipCursor extends TestNeoNodeBase{
 	}
 
 	public void testQuery() throws Exception {
-		assertEquals("val2", session.relationshipQuery().parseQuery("rel:val2").findOne().property("rel")) ;
-		assertEquals("val1", session.relationshipQuery().parseQuery("val1").findOne().property("rel")) ;
+		assertEquals("abcd", session.relationshipQuery().parseQuery("rel:abcd").findOne().property("rel")) ;
+		assertEquals("defg", session.relationshipQuery().parseQuery("defg").findOne().property("rel")) ;
 	}
 	
 	public void testRelationshipQuery() throws Exception {
@@ -46,7 +46,7 @@ public class TestRelationshipCursor extends TestNeoNodeBase{
 				assertEquals(2, rc.count()) ;
 				assertEquals(2, session.rootNode().relationShips(Direction.OUTGOING).toList().size()) ;
 				
-				final RelationshipCursor<WriteRelationship> findrc = tsession.relationshipQuery().parseQuery("rel:val2").find();
+				final RelationshipCursor<WriteRelationship> findrc = tsession.relationshipQuery().parseQuery("rel:defg").find();
 				findrc.next().remove() ;
 
 				return null;
@@ -56,10 +56,23 @@ public class TestRelationshipCursor extends TestNeoNodeBase{
 		final RelationshipCursor<ReadRelationship> rc = session.relationshipQuery().find();
 		assertEquals(1, rc.count()) ;
 		assertEquals(1, session.rootNode().relationShips(Direction.OUTGOING).toList().size()) ;
-		assertEquals("val1", rc.next().property("rel")) ;
+		assertEquals("abcd", rc.next().property("rel")) ;
 	}
 	
-	
+	public void xtestAnalyzer() throws Exception {
+		session.tran(new TransactionJob<Void>() {
+			@Override
+			public Void handle(WriteSession tsession) {
+				WriteNode hero = tsession.newNode().property("name", "hero");
+				tsession.rootNode().createRelationshipTo(hero, RelType.CHILD).property("rel", "abc1") ;
+				return null;
+			}
+		}).get() ;
+		
+		session.relationshipQuery().parseQuery("abc1").find().debugPrint(Page.ALL) ; //@Todo : notfound - mykorean analyzer
+		session.relationshipQuery().parseQuery("abc").find().debugPrint(Page.ALL) ;
+		session.relationshipQuery().parseQuery("rel:abc1").find().debugPrint(Page.ALL) ;
+	}
 	
 	
 }

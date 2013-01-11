@@ -7,6 +7,7 @@ import org.apache.lucene.analysis.standard.StandardAnalyzer;
 
 import net.ion.framework.schedule.IExecutor;
 import net.ion.framework.util.MapUtil;
+import net.ion.isearcher.searcher.MyKoreanAnalyzer;
 
 public class NeoRepository {
 
@@ -25,7 +26,7 @@ public class NeoRepository {
 	}
 	
 	public ReadSession testLogin(String wsname) {
-		return login(Credential.EMANON, wsname, StandardAnalyzer.class) ;
+		return login(Credential.EMANON, wsname, MyKoreanAnalyzer.class) ;
 	}
 	
 	public ReadSession login(Credential credential, String wsname, Class<? extends Analyzer> indexAnal) {

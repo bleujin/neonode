@@ -46,7 +46,7 @@ public class ReadSession extends NeoSession<ReadNode, ReadRelationship>{
 	}
 
 	public SessionQuery<ReadNode, ReadRelationship> createQuery() {
-		return SessionQuery.create(this) ;
+		return SessionQuery.create(this).analyzer(wspace.newAnalyzer()) ;
 	}
 
 	public ExecutionEngine executionEngine() {
