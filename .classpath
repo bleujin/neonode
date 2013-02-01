@@ -9,14 +9,15 @@
 	<classpathentry kind="lib" path="lib/neo4j-kernel-1.9.M02.jar"/>
 	<classpathentry kind="lib" path="lib/geronimo-jta_1.1_spec-1.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/apache_extend_fat.jar"/>
-	<classpathentry kind="lib" path="lib/search36_fat.jar"/>
 	<classpathentry kind="lib" path="lib/cypher/concurrentlinkedhashmap-lru-1.3.1.jar"/>
 	<classpathentry kind="lib" path="lib/cypher/neo4j-cypher-1.9.M02.jar"/>
 	<classpathentry kind="lib" path="lib/cypher/scala-library-2.9.1-1.jar"/>
-	<classpathentry kind="lib" path="lib/isearcher_2.2.jar"/>
 	<classpathentry kind="lib" path="lib/aradon/netty-3.2.7.Final.jar"/>
 	<classpathentry kind="lib" path="lib/aradon/rest_fat.jar"/>
 	<classpathentry kind="lib" path="lib/aradon/aradon_0.9.jar"/>
+	<classpathentry kind="lib" path="lib/isearcher_3.0.jar"/>
+	<classpathentry kind="lib" path="lib/search_util_fat.jar"/>
+	<classpathentry kind="lib" path="lib/search362_fat.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/IFramework"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Aradon"/>
 	<classpathentry kind="output" path="bin"/>

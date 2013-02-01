@@ -4,13 +4,11 @@ import java.util.List;
 
 import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.StringUtil;
-import net.ion.isearcher.common.IKeywordField;
-import net.ion.isearcher.common.MyField;
-import net.ion.isearcher.searcher.MyKoreanAnalyzer;
 import net.ion.neo.index.lucene.QueryContext;
+import net.ion.nsearcher.common.IKeywordField;
+import net.ion.nsearcher.common.MyField;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.cjk.CJKAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;

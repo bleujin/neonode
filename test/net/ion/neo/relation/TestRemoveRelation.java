@@ -2,7 +2,6 @@ package net.ion.neo.relation;
 
 import net.ion.framework.db.Page;
 import net.ion.framework.util.Debug;
-import net.ion.isearcher.common.MyField;
 import net.ion.neo.NeoConstant;
 import net.ion.neo.ReadRelationship;
 import net.ion.neo.RelationshipCursor;
@@ -12,6 +11,7 @@ import net.ion.neo.WriteNode;
 import net.ion.neo.WriteRelationship;
 import net.ion.neo.WriteSession;
 import net.ion.neo.NeoWorkspace.RelType;
+import net.ion.nsearcher.common.MyField;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Fieldable;

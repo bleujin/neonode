@@ -2,16 +2,13 @@ package net.ion.neo;
 
 import java.util.List;
 
-import net.ion.framework.util.Debug;
 import net.ion.framework.util.ListUtil;
 import net.ion.framework.util.StringUtil;
-import net.ion.isearcher.common.IKeywordField;
-import net.ion.isearcher.common.MyField;
-import net.ion.isearcher.searcher.MyKoreanAnalyzer;
 import net.ion.neo.index.lucene.QueryContext;
+import net.ion.nsearcher.common.IKeywordField;
+import net.ion.nsearcher.common.MyField;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.cjk.CJKAnalyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
@@ -21,9 +18,7 @@ import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
 import org.apache.lucene.search.SortField;
 import org.apache.lucene.util.Version;
-import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
-import org.neo4j.graphdb.index.Index;
 import org.neo4j.graphdb.index.IndexHits;
 import org.neo4j.graphdb.index.RelationshipIndex;
 

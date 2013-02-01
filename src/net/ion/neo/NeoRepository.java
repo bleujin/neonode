@@ -2,12 +2,11 @@ package net.ion.neo;
 
 import java.util.Map;
 
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
-
 import net.ion.framework.schedule.IExecutor;
 import net.ion.framework.util.MapUtil;
-import net.ion.isearcher.searcher.MyKoreanAnalyzer;
+import net.ion.nsearcher.search.analyzer.MyKoreanAnalyzer;
+
+import org.apache.lucene.analysis.Analyzer;
 
 public class NeoRepository {
 

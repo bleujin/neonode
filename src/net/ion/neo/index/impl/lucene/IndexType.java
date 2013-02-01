@@ -10,9 +10,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import net.ion.isearcher.common.MyField;
 import net.ion.neo.index.lucene.QueryContext;
 import net.ion.neo.index.lucene.ValueContext;
+import net.ion.nsearcher.common.MyField;
 
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;

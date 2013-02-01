@@ -15,7 +15,6 @@ public abstract class NeoNode {
 		this.inner = inner ;
 	}
 	
-	
 	public long getId(){
 		return inner.getId() ;
 	}
@@ -32,18 +31,12 @@ public abstract class NeoNode {
 		return inner.hasProperty(pkey) ;
 	}
 
-	
 
-	public boolean hasRelationShip(Direction direction){
-		return inner.hasRelationship(direction) ;
-	}
-	
-	public boolean hasRelationShip(Direction direction, RelationshipType rtype){
-		return inner.hasRelationship(direction, rtype) ;
-	}
-	
 	public boolean hasRelationShip(Direction direction, RelationshipType... rtypes){
-		return inner.hasRelationship(direction, rtypes) ;
+		if (rtypes == null || rtypes.length == 0){
+			return inner.hasRelationship(direction) ;
+		} else 
+			return inner.hasRelationship(direction, rtypes) ;
 	}
 	
 

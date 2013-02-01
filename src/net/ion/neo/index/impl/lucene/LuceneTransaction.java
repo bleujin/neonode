@@ -1,7 +1,5 @@
 package net.ion.neo.index.impl.lucene;
 
-import static net.ion.isearcher.common.IKeywordField.ISALL_FIELD;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,13 +9,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import net.ion.isearcher.common.IKeywordField;
 import net.ion.neo.index.impl.lucene.CommitContext.DocumentContext;
 import net.ion.neo.index.impl.lucene.LuceneCommand.CreateIndexCommand;
 import net.ion.neo.index.impl.lucene.LuceneCommand.DeleteCommand;
 import net.ion.neo.index.impl.lucene.LuceneCommand.RemoveCommand;
 import net.ion.neo.index.lucene.QueryContext;
 import net.ion.neo.index.lucene.ValueContext;
+import net.ion.nsearcher.common.IKeywordField;
+import net.ion.nsearcher.common.SearchConstant;
 
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -263,7 +262,7 @@ class LuceneTransaction extends XaTransaction {
 			bodyBuilder.append(field.stringValue()) ;
 			bodyBuilder.append(" ") ;
 		}
-		ori.add(new Field(ISALL_FIELD, bodyBuilder.toString(), Store.NO, Index.ANALYZED)) ;
+		ori.add(new Field(SearchConstant.ISALL_FIELD, bodyBuilder.toString(), Store.NO, Index.ANALYZED)) ;
 		return ori ;
 	}
 	
