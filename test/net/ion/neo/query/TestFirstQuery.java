@@ -28,7 +28,7 @@ public class TestFirstQuery extends TestNeoNodeBase {
 				
 				WriteNode root = tsession.rootNode();
 				
-				WriteNode bleujin = root.mergeRelationNode(RelType.CHILD, "bleujin").property("name", "bleujin").property("age", 20).property("text", "�±رⰡ �ٶ��� �޷��Դϴ�");
+				WriteNode bleujin = root.mergeRelationNode(RelType.CHILD, "bleujin").property("name", "bleujin").property("age", 20).property("text", "태극기가 바람에 펄럭입니다. ");
 				WriteNode hero = root.mergeRelationNode(RelType.CHILD, "hero").property("name", "hero").property("age", 25).propertyWithoutIndex("noindex", 3);
 				
 				bleujin.createRelationshipTo(hero, RelType.create("know")).property("type", "friend") ;
@@ -44,7 +44,7 @@ public class TestFirstQuery extends TestNeoNodeBase {
 	}
 
 	public void testTextTermQuery() throws Exception {
-		NodeCursor<ReadNode, ReadRelationship> nc = session.createQuery().parseQuery("text:�±ر�").find();
+		NodeCursor<ReadNode, ReadRelationship> nc = session.createQuery().parseQuery("text:태극기").find();
 		assertEquals(1, nc.count()) ;
 	}
 	

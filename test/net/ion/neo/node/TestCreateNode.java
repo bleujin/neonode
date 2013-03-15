@@ -29,6 +29,7 @@ public class TestCreateNode extends TestNeoNodeBase {
 	}
 	
 	public void testMergeChild() throws Exception {
+		session.dropWorkspace() ;
 		session.tran(new TransactionJob<Void>() {
 			@Override
 			public Void handle(WriteSession tsession) {
