@@ -18,6 +18,7 @@ public class NeoRepository {
 		for (NeoWorkspace ws : wss.values()) {
 			ws.close() ;
 		}
+		executor.shutdown() ;
 	}
 
 	public IExecutor executor(){

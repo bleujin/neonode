@@ -48,10 +48,11 @@
 			</manifest>
 			<fileset dir="${binDir}/" includes="net/**" />
 			<fileset dir="${binDir}/" includes="org/**" />
+			<fileset dir="src/" includes="META-INF/" />
 		</jar>
 	</target>
 	
 	<target name="copy" depends="publish">
-		<copy file="publish/neonode_${version.number}.${build.number}.jar" todir="../craken/lib/neonode/" />
+		<copy file="publish/neonode_${version.number}.${build.number}.jar" todir="../craken/lib/ref/" />
 	</target>	
 </project>

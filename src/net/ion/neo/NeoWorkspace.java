@@ -9,7 +9,6 @@ import java.util.concurrent.Future;
 import net.ion.neo.exception.NeoRuntimeException;
 
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.util.Version;
 import org.neo4j.cypher.javacompat.ExecutionEngine;
 import org.neo4j.graphdb.GraphDatabaseService;
@@ -83,7 +82,7 @@ public class NeoWorkspace {
 	public void clear() throws IOException {
 		graphDB.shutdown() ;
 		final File file = new File(dbPath);
-		if (file.exists()) FileUtils.deleteRecursively(file);
+		if (file.exists()) FileUtils.deleteRecursively(file) ;
 		this.graphDB = new GraphDatabaseFactory().newEmbeddedDatabase(dbPath) ;
 		this.engine = new ExecutionEngine(graphDB) ;
 	}

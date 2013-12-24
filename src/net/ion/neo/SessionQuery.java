@@ -12,7 +12,6 @@ import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.queryParser.ParseException;
 import org.apache.lucene.queryParser.QueryParser;
-import org.apache.lucene.queryParser.QueryParser.Operator;
 import org.apache.lucene.search.MatchAllDocsQuery;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
@@ -55,12 +54,12 @@ public class SessionQuery<T extends NeoNode, R extends NeoRelationship> {
 
 
 	public SessionQuery<T, R> ascending(String propId) {
-		sorts.add(new SortField(propId + MyField.SORT_POSTFIX, SortField.STRING));
+		sorts.add(new SortField(propId + MyField.SORT_POSTFIX,  SortField.STRING));
 		return this;
 	}
 
-	public SessionQuery<T, R> ascending(String propId, int sortType) {
-		sorts.add(new SortField(propId + MyField.SORT_POSTFIX, sortType));
+	public SessionQuery<T, R> ascending(String propId, SortField sortType) {
+		sorts.add(new SortField(propId + MyField.SORT_POSTFIX, sortType.getType()));
 		return this;
 	}
 
@@ -69,8 +68,8 @@ public class SessionQuery<T extends NeoNode, R extends NeoRelationship> {
 		return this;
 	}
 
-	public SessionQuery<T, R> descending(String propId, int sortType) {
-		sorts.add(new SortField(propId + MyField.SORT_POSTFIX, sortType, true));
+	public SessionQuery<T, R> descending(String propId, SortField sortType) {
+		sorts.add(new SortField(propId + MyField.SORT_POSTFIX, sortType.getType(), true));
 		return this;
 	}
 
@@ -136,7 +135,7 @@ public class SessionQuery<T extends NeoNode, R extends NeoRelationship> {
 			query = parser.parse(queryString);
 		}
 
-		QueryContext context = new QueryContext(query).defaultOperator(Operator.AND);
+		QueryContext context = new QueryContext(query) ; //.defaultOperator(Operator.AND);
 		if (!sorts.isEmpty()) {
 			context.sort(new Sort(sorts.toArray(new SortField[0])));
 		} else {

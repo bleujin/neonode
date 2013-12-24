@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.List;
 
 import net.ion.framework.db.Page;
+import net.ion.framework.util.Debug;
 import net.ion.framework.util.ListUtil;
 import net.ion.neo.NodeCursor;
 import net.ion.neo.ReadNode;
@@ -34,8 +35,9 @@ public class TestPaging extends TestNeoNodeBase{
 		}).get() ;
 		
 		NodeCursor<ReadNode, ReadRelationship> nc = session.createQuery().parseQuery("name:bleujin").ascending("idx").skip(10).atLength(10).find();
-		assertEquals(10, nc.toList().get(0).property("idx")) ;
-		assertEquals(19, nc.toList().get(9).property("idx")) ;
+		final List<ReadNode> list = nc.toList();
+		assertEquals(10, list.get(0).property("idx")) ;
+		assertEquals(19, list.get(9).property("idx")) ;
 		
 		
 		session.tran(new TransactionJob<Void>() {
@@ -45,8 +47,9 @@ public class TestPaging extends TestNeoNodeBase{
 				tsession.newNode().property("idx", -1).property("name", "bleujin");
 				
 				NodeCursor<WriteNode, WriteRelationship> wnc = tsession.createQuery().parseQuery("name:bleujin").ascending("idx").skip(10).atLength(10).find();
-				assertEquals(9, wnc.toList().get(0).property("idx")) ;
-				assertEquals(18, wnc.toList().get(9).property("idx")) ;
+				final List<WriteNode> list = wnc.toList();
+				assertEquals(9, list.get(0).property("idx")) ;
+				assertEquals(18, list.get(9).property("idx")) ;
 				
 				wnc.debugPrint(Page.ALL) ;
 				return null;
@@ -55,10 +58,6 @@ public class TestPaging extends TestNeoNodeBase{
 	}
 	
 	
-	
-	public void testIterator() throws Exception {
-		
-	}
 	
 	
 	

@@ -28,6 +28,9 @@ public class TestCreateNode extends TestNeoNodeBase {
 		assertEquals(20, found.property("age")) ;
 	}
 	
+	
+	
+	
 	public void testMergeChild() throws Exception {
 		session.dropWorkspace() ;
 		session.tran(new TransactionJob<Void>() {

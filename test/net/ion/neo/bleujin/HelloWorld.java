@@ -1,7 +1,5 @@
 package net.ion.neo.bleujin;
 
-import net.ion.framework.util.Debug;
-
 import org.neo4j.graphdb.Direction;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.Relationship;
@@ -12,6 +10,21 @@ import org.neo4j.tooling.GlobalGraphOperations;
 
 public class HelloWorld extends TestBase {
 
+	public void testFirst() throws Exception {
+
+		Transaction tx = graphDB.beginTx();
+		
+		Node firstNode = graphDB.createNode();
+		firstNode.setProperty("message", "Hello, ") ;
+		Node secondNode = graphDB.createNode();
+		secondNode.setProperty("message", "World!") ;
+		
+		Relationship relationShip = firstNode.createRelationshipTo(secondNode, RelTypes.KNOWS);
+		relationShip.setProperty("message", "brave Neo4j") ;
+		tx.success() ;
+		tx.finish() ;
+	}
+	
 	public void testCreateDB() throws Exception {
 
 		Transaction tx = graphDB.beginTx();
@@ -24,6 +37,8 @@ public class HelloWorld extends TestBase {
 			Node secondNode = graphDB.createNode();
 			secondNode.setProperty("message", " World!");
 
+			
+			
 			Relationship rel = firstNode.createRelationshipTo(firstNode, RelTypes.KNOWS);
 			rel.setProperty("message", "brave Neo");
 
@@ -71,4 +86,12 @@ public class HelloWorld extends TestBase {
 		
 	}
 
+}
+
+class Debug {
+
+	public static void line(Object... found) {
+		System.out.println("===" + found) ;
+	}
+	
 }
